@@ -5,6 +5,7 @@ namespace CramIt.Core
     public class Item
     {
         public string Name              { get; }
+        public string TRMoveName        { get; }
         public int    SpriteRowIndex    { get; }
         public int    SpriteColumnIndex { get; }
         public bool   CanBeInput        { get; }
@@ -15,11 +16,6 @@ namespace CramIt.Core
         {
             const int maxItemValue = 20;
 
-            if ( ! Enum.IsDefined(typeof(Type), type))
-            {
-                throw new ArgumentException("Must be a defined member of the enum", nameof(type));
-            }
-
             if (value < 0)
             {
                 throw new ArgumentException("Must be nonnegative", nameof(value));
@@ -29,13 +25,39 @@ namespace CramIt.Core
                 throw new ArgumentException($"Must not be greater than {maxItemValue}", nameof(value));
             }
 
-            return new Item(name, spriteRowIndex, spriteColumnIndex, true, type, value);
+            if ( ! Enum.IsDefined(typeof(Type), type))
+            {
+                throw new ArgumentException("Must be a defined member of the enum", nameof(type));
+            }
+
+            return new Item(name, null, spriteRowIndex, spriteColumnIndex, true, type, value);
         }
 
-        public static Item OutputOnly(string name, int spriteRowIndex, int spriteColumnIndex)
-            => new Item(name, spriteRowIndex, spriteColumnIndex, false, (Type)(int.MinValue), -1 * (1 << 10));
+        public static Item TR(int number, string trMoveName, int spriteRowIndex, int spriteColumnIndex, Type type)
+        {
+            if (trMoveName is null)
+            {
+                throw new ArgumentNullException(nameof(trMoveName));
+            }
+            else if (string.IsNullOrWhiteSpace(trMoveName))
+            {
+                throw new ArgumentException("Must not be empty nor consist entirely of whitespace", nameof(trMoveName));
+            }
 
-        private Item(string name, int spriteRowIndex, int spriteColumnIndex, bool canBeInput, Type type, int value)
+            if ( ! Enum.IsDefined(typeof(Type), type))
+            {
+                throw new ArgumentException("Must be a defined member of the enum", nameof(type));
+            }
+
+            return new Item($"TR{number:D2}", trMoveName, spriteRowIndex, spriteColumnIndex, false, type, InvalidValue);
+        }
+
+        public static Item Ball(string name, int spriteRowIndex, int spriteColumnIndex)
+            => new Item(name, null, spriteRowIndex, spriteColumnIndex, false, (Type)(int.MinValue), InvalidValue);
+
+        const int InvalidValue = -1 * (1 << 10);
+
+        private Item(string name, string trMoveName, int spriteRowIndex, int spriteColumnIndex, bool canBeInput, Type type, int value)
         {
             const int numberOfSpritesPerRow = 20;
             const int numberOfRowsOfSprites = 16;
@@ -43,6 +65,10 @@ namespace CramIt.Core
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
+            }
+            else if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Must not be empty nor consist entirely of whitespace", nameof(name));
             }
 
             if (spriteRowIndex < 0)
@@ -64,6 +90,7 @@ namespace CramIt.Core
             }
 
             Name              = name;
+            TRMoveName        = trMoveName;
             SpriteRowIndex    = spriteRowIndex;
             SpriteColumnIndex = spriteColumnIndex;
             CanBeInput        = canBeInput;
