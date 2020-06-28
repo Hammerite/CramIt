@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using static CramIt.Core.Type;
-using SR = CramIt.Core.StandardRecipe;
+using SR   = CramIt.Core.StandardRecipe;
+using BR   = CramIt.Core.BallRecipe;
+using BRAC = CramIt.Core.BallRecipeSpecificAlternativeOutcome;
 
 namespace CramIt.Core
 {
     public static class Recipes
     {
-        public static IReadOnlyDictionary<string, IReadOnlyList<SR>> StandardRecipes { get; }
+        public static IReadOnlyDictionary<string, IReadOnlyList<SR>> StandardRecipes     { get; }
+        public static IReadOnlyDictionary<string, BR>                BallRecipes         { get; }
+        public static IReadOnlyDictionary<string, Item>              RepeatedItemRecipes { get; }
 
         static Recipes()
         {
@@ -223,6 +227,100 @@ namespace CramIt.Core
                 .Concat(standardRecipes_SingleTypeMultipleValues)
                 .Concat(standardRecipes_EverythingElse)
                 .ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyList<SR>)(new [] {kvp.Value}));
+
+            var apricornColours_All                     = new [] {"Black", "Blue", "Green", "Pink", "Red", "White", "Yellow"};
+            var apricornColours_ContributingToUltraBall = new [] {                 "Green", "Pink", "Red", "White", "Yellow"};
+
+            var BR_PokeBall  = new BR(
+                apricornColours_All,
+                247,
+                247 + 247 + 10,
+                new [] {new BRAC("Great Ball", 247), new BRAC("Safari Ball", 1), new BRAC("Sport Ball", 1)}
+            );
+            var BR_GreatBall = new BR(
+                apricornColours_All,
+                247,
+                247 + 247 + 10,
+                new [] {new BRAC("Pok\u00e9 Ball", 247), new BRAC("Safari Ball", 1), new BRAC("Sport Ball", 1)}
+            );
+            var BR_UltraBall = new BR(
+                apricornColours_ContributingToUltraBall,
+                247,
+                247 + 10,
+                new [] {new BRAC("Pok\u00e9 Ball", 247), new BRAC("Great Ball", 247), new BRAC("Safari Ball", 1), new BRAC("Sport Ball", 1)}
+            );
+
+            var BR_SafariBall = new BR(
+                apricornColours_All,
+                1,
+                247 + 247 + 10 + 1,
+                new [] {new BRAC("Pok\u00e9 Ball", 247), new BRAC("Great Ball", 247), new BRAC("Sport Ball", 1)}
+            );
+            var BR_SportBall = new BR(
+                apricornColours_All,
+                1,
+                247 + 247 + 10 + 1,
+                new [] {new BRAC("Pok\u00e9 Ball", 247), new BRAC("Great Ball", 247), new BRAC("Safari Ball", 1)}
+            );
+
+            BallRecipes = new Dictionary<string, BR>
+            {
+                {"Pok\u00e9 Ball", BR_PokeBall },
+                {"Great Ball",     BR_GreatBall},
+                {"Ultra Ball",     BR_UltraBall},
+                {"Dive Ball",    new BR("Blue",   247, 0, AlternativeOutcomes_247("Net",    "Lure"   ))},
+                {"Dusk Ball",    new BR("Black",  247, 0, AlternativeOutcomes_247("Luxury", "Heavy"  ))},
+                {"Heal Ball",    new BR("Pink",   247, 0, AlternativeOutcomes_247("Ultra",  "Love"   ))},
+                {"Luxury Ball",  new BR("Black",  247, 0, AlternativeOutcomes_247("Dusk",   "Heavy"  ))},
+                {"Nest Ball",    new BR("Green",  247, 0, AlternativeOutcomes_247("Ultra",  "Friend" ))},
+                {"Net Ball",     new BR("Blue",   247, 0, AlternativeOutcomes_247("Dive",   "Lure"   ))},
+                {"Premier Ball", new BR("White",  247, 0, AlternativeOutcomes_247("Ultra",  "Fast"   ))},
+                {"Quick Ball",   new BR("Yellow", 247, 0, AlternativeOutcomes_247("Ultra",  "Moon"   ))},
+                {"Repeat Ball",  new BR("Red",    247, 0, AlternativeOutcomes_247("Ultra",  "Level"  ))},
+                {"Fast Ball",    new BR("White",   10, 0, AlternativeOutcomes_10 ("Ultra",  "Premier"))},
+                {"Friend Ball",  new BR("Green",   10, 0, AlternativeOutcomes_10 ("Ultra",  "Nest"   ))},
+                {"Heavy Ball",   new BR("Black",   10, 0, AlternativeOutcomes_10 ("Dusk",   "Luxury" ))},
+                {"Level Ball",   new BR("Red",     10, 0, AlternativeOutcomes_10 ("Ultra",  "Repeat" ))},
+                {"Love Ball",    new BR("Pink",    10, 0, AlternativeOutcomes_10 ("Ultra",  "Heal"   ))},
+                {"Lure Ball",    new BR("Blue",    10, 0, AlternativeOutcomes_10 ("Dive",   "Net"    ))},
+                {"Moon Ball",    new BR("Yellow",  10, 0, AlternativeOutcomes_10 ("Ultra",  "Quick"  ))},
+                {"Safari Ball", BR_SafariBall},
+                {"Sport Ball",  BR_SportBall },
+            };
+
+            IEnumerable<BRAC> AlternativeOutcomes_247(string b247, string b10)
+            {
+                yield return new BRAC($"Pok\u00e9 Ball", 247);
+                yield return new BRAC($"Great Ball",     247);
+                yield return new BRAC($"{b247} Ball",    247);
+                yield return new BRAC($"{b10} Ball",      10);
+                yield return new BRAC($"Safari Ball",      1);
+                yield return new BRAC($"Sport Ball",       1);
+            }
+
+            IEnumerable<BRAC> AlternativeOutcomes_10(string b247a, string b247b)
+            {
+                yield return new BRAC($"Pok\u00e9 Ball", 247);
+                yield return new BRAC($"Great Ball",     247);
+                yield return new BRAC($"{b247a} Ball",   247);
+                yield return new BRAC($"{b247b} Ball",   247);
+                yield return new BRAC($"Safari Ball",      1);
+                yield return new BRAC($"Sport Ball",       1);
+            }
+
+            RepeatedItemRecipes = new Dictionary<string, Item>
+            {
+                {"Ability Capsule", Items.ItemsByName["Rare Candy"   ]},
+                {"Balm Mushroom",   Items.ItemsByName["Big Mushroom" ]},
+                {"Big Mushroom",    Items.ItemsByName["Tiny Mushroom"]},
+                {"Big Nugget",      Items.ItemsByName["Nugget"       ]},
+                {"Big Pearl",       Items.ItemsByName["Pearl"        ]},
+                {"Comet Shard",     Items.ItemsByName["Star Piece"   ]},
+                {"Gold Bottle Cap", Items.ItemsByName["Bottle Cap"   ]},
+                {"Pearl String",    Items.ItemsByName["Big Pearl"    ]},
+                {"PP Up",           Items.ItemsByName["Armorite Ore" ]},
+                {"Star Piece",      Items.ItemsByName["Stardust"     ]},
+            };
         }
     }
 }

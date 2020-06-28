@@ -427,7 +427,7 @@ namespace CramIt.Core
                 Item.Ball("Ultra Ball",     15, 14),
             };
 
-            ItemsByName = ItemList.ToDictionary(item => item.Name, item => item);
+            ItemsByName = ItemList.ToDictionary(item => item.Name, item => item, StringComparer.InvariantCultureIgnoreCase);
         }
     }
 }
