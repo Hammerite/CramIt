@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static CramIt.Core.Type;
 using SR   = CramIt.Core.StandardRecipe;
 using BR   = CramIt.Core.BallRecipe;
 using BRAC = CramIt.Core.BallRecipeSpecificAlternativeOutcome;
+using static CramIt.Core.Type;
 
 namespace CramIt.Core
 {

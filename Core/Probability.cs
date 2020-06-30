@@ -36,7 +36,7 @@ namespace CramIt.Core
             => (ValueInThousandths / 1000.0).ToString("P1", CultureInfo.CurrentCulture);
 
         public override bool Equals(object that)
-            => that is Probability && Equals((Probability)that);
+            => that is Probability p && Equals(p);
 
         public bool Equals(Probability that)
         {

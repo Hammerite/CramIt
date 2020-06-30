@@ -10,6 +10,9 @@ namespace CramIt.Core
         public static IReadOnlyList<Item>               ItemList    { get; }
         public static IReadOnlyDictionary<string, Item> ItemsByName { get; }
 
+        public static IEnumerable<Item> InputItems
+            => ItemList.Where(item => item.CanBeInput);
+
         static Items()
         {
             ItemList = new List<Item>
