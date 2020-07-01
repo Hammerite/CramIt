@@ -43,11 +43,7 @@ namespace CramIt.Core
             }
             ProbabilityOfSuccess = probabilityOfSuccess;
 
-            if (probabilityOfUnspecifiedAlternativeOutcome.IsImpossible)
-            {
-                throw new ArgumentException("Must not be impossible", nameof(probabilityOfUnspecifiedAlternativeOutcome));
-            }
-            else if (probabilityOfUnspecifiedAlternativeOutcome.IsCertain)
+            if (probabilityOfUnspecifiedAlternativeOutcome.IsCertain)
             {
                 throw new ArgumentException("Must not be certain", nameof(probabilityOfUnspecifiedAlternativeOutcome));
             }

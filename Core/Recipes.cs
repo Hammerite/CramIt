@@ -226,7 +226,7 @@ namespace CramIt.Core
                 .Select(kvp => new KeyValuePair<string, IReadOnlyList<SR>>(kvp.Key, new [] {kvp.Value}))
                 .Concat(standardRecipes_SingleTypeMultipleValues)
                 .Concat(standardRecipes_EverythingElse)
-                .ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyList<SR>)(new [] {kvp.Value}));
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             var apricornColours_All                     = new [] {"Black", "Blue", "Green", "Pink", "Red", "White", "Yellow"};
             var apricornColours_ContributingToUltraBall = new [] {                 "Green", "Pink", "Red", "White", "Yellow"};
@@ -253,13 +253,13 @@ namespace CramIt.Core
             var BR_SafariBall = new BR(
                 apricornColours_All,
                 1,
-                247 + 247 + 10 + 1,
+                247 + 247 + 10,
                 new [] {new BRAC("Pok\u00e9 Ball", 247), new BRAC("Great Ball", 247), new BRAC("Sport Ball", 1)}
             );
             var BR_SportBall = new BR(
                 apricornColours_All,
                 1,
-                247 + 247 + 10 + 1,
+                247 + 247 + 10,
                 new [] {new BRAC("Pok\u00e9 Ball", 247), new BRAC("Great Ball", 247), new BRAC("Safari Ball", 1)}
             );
 

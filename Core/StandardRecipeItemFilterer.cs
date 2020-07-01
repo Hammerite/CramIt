@@ -9,6 +9,9 @@ namespace CramIt.Core
     {
         public const int NumberOfItemsPerBatch = 4;
 
+        public StandardRecipeItemFilterer(StandardRecipe targetRecipe): this(targetRecipe, new Item[0])
+        {}
+
         public StandardRecipeItemFilterer(StandardRecipe targetRecipe, IReadOnlyList<Item> alreadyChosenInputs)
         {
             if (targetRecipe is null)
