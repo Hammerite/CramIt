@@ -9,6 +9,9 @@ namespace Tests
     [TestClass]
     public class StandardRecipeGroupItemFiltererTests
     {
+        private static IEnumerable<Item> ItemNamesToItems(params string[] itemNames)
+            => itemNames.Select(itemName => Items.ItemsByName[itemName]);
+
         [TestMethod]
         public void CanCompleteRecipeUsingAnApricornIfAndOnlyIfMinValueIsLessThan61()
         {
@@ -158,14 +161,12 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CanCompleteEitherAirBalloonRecipeWhenTotalValueOf3AlreadyChosenInputsIs25()
+        public void CompletionOfAnAirBalloonRecipeWhenTotalValueOf3AlreadyChosenInputsIs25()
         {
-            var alreadyChosenInputs_IncludingAFlyingTypeItem =
-                new [] {"Rare Candy", "Wacan Berry", "Swift Feather"}.Select(itemName => Items.ItemsByName[itemName]);
-            var alreadyChosenInputs_NotIncludingAFlyingTypeItem =
-                new [] {"Rare Candy", "Wacan Berry", "Dusk Stone"}.Select(itemName => Items.ItemsByName[itemName]);
+            var alreadyChosenInputItems_IncludingAFlyingTypeItem    = ItemNamesToItems("Rare Candy", "Wacan Berry", "Swift Feather");
+            var alreadyChosenInputItems_NotIncludingAFlyingTypeItem = ItemNamesToItems("Rare Candy", "Wacan Berry", "Dusk Stone"   );
 
-            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputsIncludeAFlyingTypeItem = new []
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAFlyingTypeItem = new []
             {
                 "Ability Capsule", "Chople Berry",    "Exp. Candy XS",    "Grepa Berry",    "Leaf Stone",     "Passho Berry",   "Repel",          "Stardust",
                 "Absorb Bulb",     "Clever Feather",  "Expert Belt",      "Ground Memory",  "Leppa Berry",    "Payapa Berry",   "Resist Feather", "Starf Berry",
@@ -188,48 +189,48 @@ namespace Tests
                 "Chilan Berry",    "Exp. Candy S",    "Grass Memory",     "Lansat Berry",   "PP Up",          "Reaper Cloth",   "Snowball",       "Zinc",
                 "Chipped Pot",     "Exp. Candy XL",   "Grassy Seed",      "Lax Incense",
             };
-            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputsDoNotIncludeAFlyingTypeItem = new []
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem = new []
             {
                 "Clever Feather", "Flying Memory",  "Grepa Berry",    "Lansat Berry", "Muscle Feather", "Resist Feather", "Sharp Beak", "Swift Feather",
                 "Coba Berry",     "Genius Feather", "Health Feather", "Lum Berry",    "Pretty Feather",
             };
 
-            var filtererGroup_AlreadyChosenInputsIncludeAFlyingTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], alreadyChosenInputs_IncludingAFlyingTypeItem);
-            var filtererGroup_AlreadyChosenInputsDoNotIncludeAFlyingTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], alreadyChosenInputs_NotIncludingAFlyingTypeItem);
+            var filtererGroup_AlreadyChosenInputItemsIncludeAFlyingTypeItem =
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], alreadyChosenInputItems_IncludingAFlyingTypeItem);
+            var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem =
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], alreadyChosenInputItems_NotIncludingAFlyingTypeItem);
 
             foreach (var item in Items.InputItems)
             {
-                bool canCompleteRecipe_AlreadyChosenInputsIncludeAFlyingTypeItem_Expected =
-                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputsIncludeAFlyingTypeItem.Contains(item.Name);
-                bool canCompleteRecipe_AlreadyChosenInputsIncludeAFlyingTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputsIncludeAFlyingTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFlyingTypeItem_Expected =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAFlyingTypeItem.Contains(item.Name);
+                bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFlyingTypeItem_Actual =
+                    filtererGroup_AlreadyChosenInputItemsIncludeAFlyingTypeItem.CanCompleteAnyRecipeUsingItem(item);
                 Assert.AreEqual(
-                    canCompleteRecipe_AlreadyChosenInputsIncludeAFlyingTypeItem_Expected,
-                    canCompleteRecipe_AlreadyChosenInputsIncludeAFlyingTypeItem_Actual,
-                    $"[{item.Name}, already chosen inputs include a Flying-type item]"
+                    canCompleteRecipe_AlreadyChosenInputItemsIncludeAFlyingTypeItem_Expected,
+                    canCompleteRecipe_AlreadyChosenInputItemsIncludeAFlyingTypeItem_Actual,
+                    $"[{item.Name}, already-chosen input items include a Flying-type item]"
                 );
 
-                bool canCompleteRecipe_AlreadyChosenInputsDoNotIncludeAFlyingTypeItem_Expected =
-                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputsDoNotIncludeAFlyingTypeItem.Contains(item.Name);
-                bool canCompleteRecipe_AlreadyChosenInputsDoNotIncludeAFlyingTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputsDoNotIncludeAFlyingTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem_Expected =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem.Contains(item.Name);
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem_Actual =
+                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem.CanCompleteAnyRecipeUsingItem(item);
                 Assert.AreEqual(
-                    canCompleteRecipe_AlreadyChosenInputsDoNotIncludeAFlyingTypeItem_Expected,
-                    canCompleteRecipe_AlreadyChosenInputsDoNotIncludeAFlyingTypeItem_Actual,
-                    $"[{item.Name}, already chosen inputs do not include a Flying-type item]"
+                    canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem_Expected,
+                    canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem_Actual,
+                    $"[{item.Name}, already-chosen input items do not include a Flying-type item]"
                 );
             }
         }
 
         [TestMethod]
-        public void CanCompleteEitherSnowballRecipeWhenTotalValueOf2AlreadyChosenInputsIs9()
+        public void CompletionOfASnowballRecipeWhenTotalValueOf2AlreadyChosenInputsIs9()
         {
-            var alreadyChosenInputs_IncludingAnIceTypeItem    = new [] {"Heat Rock", "Ice Stone" }.Select(itemName => Items.ItemsByName[itemName]);
-            var alreadyChosenInputs_NotIncludingAnIceTypeItem = new [] {"Heat Rock", "Dusk Stone"}.Select(itemName => Items.ItemsByName[itemName]);
+            var alreadyChosenInputItems_IncludingAnIceTypeItem    = ItemNamesToItems("Heat Rock", "Ice Stone" );
+            var alreadyChosenInputItems_NotIncludingAnIceTypeItem = ItemNamesToItems("Heat Rock", "Dusk Stone");
 
-            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputsIncludeAnIceTypeItem = new []
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAnIceTypeItem = new []
             {
                 "Ability Capsule", "Cheri Berry",     "Exp. Candy XS",   "Ground Memory", "Oran Berry",    "Psychic Memory", "Rock Memory",      "Super Repel",
                 "Amulet Coin",     "Chesto Berry",    "Expert Belt",     "Honey",         "PP Max",        "Pure Incense",   "Rocky Helmet",     "Sweet Apple",
@@ -245,7 +246,7 @@ namespace Tests
                 "Bug Memory",      "Electric Memory", "Green Apricorn",  "Metal Coat",    "Protector",     "Rock Incense",   "Strawberry Sweet", "Yellow Apricorn",
                 "Charcoal",        "Eviolite",        "Grip Claw",       "Odd Incense",
             };
-            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputsDoNotIncludeAnIceTypeItem = new []
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem = new []
             {
                 "Ability Capsule", "Bottle Cap",   "Destiny Knot",    "Flower Sweet",    "King's Rock",   "Poison Memory",  "Red Apricorn",     "Sweet Apple",
                 "Amulet Coin",     "Bug Memory",   "Dragon Memory",   "Flying Memory",   "Love Sweet",    "Prism Scale",    "Ribbon Sweet",     "Tart Apple",
@@ -259,31 +260,334 @@ namespace Tests
                 "Blunder Policy",
             };
 
-            var filtererGroup_AlreadyChosenInputsIncludeAnIceTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], alreadyChosenInputs_IncludingAnIceTypeItem);
-            var filtererGroup_AlreadyChosenInputsDoNotIncludeAnIceTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], alreadyChosenInputs_NotIncludingAnIceTypeItem);
+            var filtererGroup_AlreadyChosenInputItemsIncludeAnIceTypeItem =
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], alreadyChosenInputItems_IncludingAnIceTypeItem);
+            var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem =
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], alreadyChosenInputItems_NotIncludingAnIceTypeItem);
 
             foreach (var item in Items.InputItems)
             {
-                bool canCompleteRecipe_AlreadyChosenInputsIncludeAnIceTypeItem_Expected =
-                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputsIncludeAnIceTypeItem.Contains(item.Name);
-                bool canCompleteRecipe_AlreadyChosenInputsIncludeAnIceTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputsIncludeAnIceTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAnIceTypeItem_Expected =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAnIceTypeItem.Contains(item.Name);
+                bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAnIceTypeItem_Actual =
+                    filtererGroup_AlreadyChosenInputItemsIncludeAnIceTypeItem.CanCompleteAnyRecipeUsingItem(item);
                 Assert.AreEqual(
-                    canCompleteRecipe_AlreadyChosenInputsIncludeAnIceTypeItem_Expected,
-                    canCompleteRecipe_AlreadyChosenInputsIncludeAnIceTypeItem_Actual,
-                    $"[{item.Name}, already chosen inputs include an Ice-type item]"
+                    canCompleteRecipe_AlreadyChosenInputItemsIncludeAnIceTypeItem_Expected,
+                    canCompleteRecipe_AlreadyChosenInputItemsIncludeAnIceTypeItem_Actual,
+                    $"[{item.Name}, already-chosen input items include an Ice-type item]"
                 );
 
-                bool canCompleteRecipe_AlreadyChosenInputsDoNotIncludeAnIceTypeItem_Expected =
-                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputsDoNotIncludeAnIceTypeItem.Contains(item.Name);
-                bool canCompleteRecipe_AlreadyChosenInputsDoNotIncludeAnIceTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputsDoNotIncludeAnIceTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem_Expected =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem.Contains(item.Name);
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem_Actual =
+                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem.CanCompleteAnyRecipeUsingItem(item);
                 Assert.AreEqual(
-                    canCompleteRecipe_AlreadyChosenInputsDoNotIncludeAnIceTypeItem_Expected,
-                    canCompleteRecipe_AlreadyChosenInputsDoNotIncludeAnIceTypeItem_Actual,
-                    $"[{item.Name}, already chosen inputs do not include an Ice-type item]"
+                    canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem_Expected,
+                    canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem_Actual,
+                    $"[{item.Name}, already-chosen input items do not include an Ice-type item]"
+                );
+            }
+        }
+
+        [TestMethod]
+        public void CompletionOfAStrawberrySweetRecipeWhenTotalValueOf3AlreadyChosenInputsIs50()
+        {
+            var alreadyChosenInputItems_IncludingAFairyTypeItem    = ItemNamesToItems("Rare Candy", "Rare Candy", "Sachet"    );
+            var alreadyChosenInputItems_NotIncludingAFairyTypeItem = ItemNamesToItems("Rare Candy", "Rare Candy", "Light Clay");
+
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAFairyTypeItem = new []
+            {
+                "Adamant Mint",   "Bright Powder", "Flame Orb",        "Impish Mint",  "Magnet",         "Petaya Berry",    "Red Apricorn", "Soothe Bell",
+                "Adrenaline Orb", "Calm Mint",     "Focus Band",       "Iron Ball",    "Mental Herb",    "Pink Apricorn",   "Red Card",     "Star Piece",
+                "Air Balloon",    "Careful Mint",  "Focus Sash",       "Jolly Mint",   "Metal Powder",   "Power Anklet",    "Relaxed Mint", "Terrain Extender",
+                "Apicot Berry",   "Cell Battery",  "Galarica Cuff",    "Lax Mint",     "Mild Mint",      "Power Band",      "Ring Target",  "Thick Club",
+                "Assault Vest",   "Choice Band",   "Ganlon Berry",     "Leek",         "Miracle Seed",   "Power Belt",      "Sachet",       "Throat Spray",
+                "Big Mushroom",   "Choice Scarf",  "Gentle Mint",      "Leftovers",    "Modest Mint",    "Power Bracer",    "Salac Berry",  "Timid Mint",
+                "Big Pearl",      "Choice Specs",  "Green Apricorn",   "Liechi Berry", "Muscle Band",    "Power Lens",      "Sassy Mint",   "Toxic Orb",
+                "Black Apricorn", "Damp Rock",     "Hard Stone",       "Life Orb",     "Naive Mint",     "Power Weight",    "Scope Lens",   "Twisted Spoon",
+                "Black Belt",     "Dragon Fang",   "Hasty Mint",       "Light Ball",   "Naughty Mint",   "Protective Pads", "Serious Mint", "Utility Umbrella",
+                "Black Glasses",  "Dragon Scale",  "Heat Rock",        "Light Clay",   "Never-Melt Ice", "Quiet Mint",      "Shell Bell",   "White Apricorn",
+                "Blue Apricorn",  "Eject Button",  "Heavy-Duty Boots", "Lonely Mint",  "Nugget",         "Rare Bone",       "Smooth Rock",  "White Herb",
+                "Bold Mint",      "Eject Pack",    "Icy Rock",         "Lucky Egg",    "Oval Stone",     "Rash Mint",       "Soft Sand",    "Yellow Apricorn",
+                "Brave Mint",     "Everstone",
+            };
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem = new [] {"Pink Apricorn", "Bright Powder", "Sachet"};
+
+            var filtererGroup_AlreadyChosenInputItemsIncludeAFairyTypeItem =
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Strawberry Sweet"], alreadyChosenInputItems_IncludingAFairyTypeItem);
+            var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem =
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Strawberry Sweet"], alreadyChosenInputItems_NotIncludingAFairyTypeItem);
+
+            foreach (var item in Items.InputItems)
+            {
+                bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFairyTypeItem_Expected =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAFairyTypeItem.Contains(item.Name);
+                bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFairyTypeItem_Actual =
+                    filtererGroup_AlreadyChosenInputItemsIncludeAFairyTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                Assert.AreEqual(
+                    canCompleteRecipe_AlreadyChosenInputItemsIncludeAFairyTypeItem_Expected,
+                    canCompleteRecipe_AlreadyChosenInputItemsIncludeAFairyTypeItem_Actual,
+                    $"[{item.Name}, already-chosen input items include a Fairy-type item]"
+                );
+
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem_Expected =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem.Contains(item.Name);
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem_Actual =
+                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                Assert.AreEqual(
+                    canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem_Expected,
+                    canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem_Actual,
+                    $"[{item.Name}, already-chosen input items do not include a Fairy-type item]"
+                );
+            }
+        }
+
+        [TestMethod]
+        public void CompletionOfAWishingPieceRecipeWhenTotalValueOf2Or3AlreadyChosenInputsIs21()
+        {
+            var alreadyChosenInputs_2Items_IncludingARockTypeItem =
+                ItemNamesToItems("Rare Candy", "Rock Incense");
+            var alreadyChosenInputs_2Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                ItemNamesToItems("Rare Candy", "Oran Berry");
+            var alreadyChosenInputs_2Items_ConsistingOfPsychicTypeItemsOnly =
+                ItemNamesToItems("Rare Candy", "Exp. Candy XS");
+            var alreadyChosenInputs_3Items_IncludingARockTypeItem =
+                ItemNamesToItems("Rare Candy", "Rock Incense", "White Apricorn");
+            var alreadyChosenInputs_3Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                ItemNamesToItems("Rare Candy", "Exp. Candy XS", "Blue Apricorn");
+            var alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly =
+                ItemNamesToItems("Light Clay", "Light Clay", "Exp. Candy XS");
+
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType = new []
+            {
+                "Absorb Bulb",    "Chople Berry",   "Float Stone",    "Iron",          "Max Repel",      "Pixie Plate",    "Rose Incense",  "Swift Feather",
+                "Aguav Berry",    "Clever Feather", "Full Incense",   "Jaboca Berry",  "Misty Seed",     "Pomeg Berry",    "Roseli Berry",  "Tamato Berry",
+                "Aspear Berry",   "Coba Berry",     "Galarica Twig",  "Kasib Berry",   "Moon Stone",     "Pretty Feather", "Rowap Berry",   "Tanga Berry",
+                "Babiri Berry",   "Colbur Berry",   "Genius Feather", "Kebia Berry",   "Muscle Feather", "Protein",        "Rusted Shield", "Thunder Stone",
+                "Big Root",       "Dawn Stone",     "Grassy Seed",    "Kee Berry",     "Normal Gem",     "Psychic Seed",   "Rusted Sword",  "Tiny Mushroom",
+                "Binding Band",   "Dusk Stone",     "Green Apricorn", "Kelpsy Berry",  "Occa Berry",     "Pure Incense",   "Sea Incense",   "Wacan Berry",
+                "Black Apricorn", "Dynamax Candy",  "Grepa Berry",    "Lax Incense",   "Odd Incense",    "Qualot Berry",   "Shiny Stone",   "Water Stone",
+                "Blue Apricorn",  "Electric Seed",  "HP Up",          "Leaf Stone",    "Oran Berry",     "Rawst Berry",    "Shuca Berry",   "Wave Incense",
+                "Calcium",        "Exp. Candy L",   "Haban Berry",    "Leppa Berry",   "Passho Berry",   "Red Apricorn",   "Sitrus Berry",  "White Apricorn",
+                "Carbos",         "Exp. Candy M",   "Health Feather", "Luck Incense",  "Payapa Berry",   "Repel",          "Snowball",      "Wiki Berry",
+                "Charti Berry",   "Exp. Candy S",   "Hondew Berry",   "Lum Berry",     "Pearl",          "Resist Feather", "Stardust",      "Yache Berry",
+                "Cheri Berry",    "Exp. Candy XS",  "Honey",          "Luminous Moss", "Pecha Berry",    "Rindo Berry",    "Sun Stone",     "Yellow Apricorn",
+                "Chesto Berry",   "Figy Berry",     "Iapapa Berry",   "Mago Berry",    "Persim Berry",   "Rock Incense",   "Super Repel",   "Zinc",
+                "Chilan Berry",   "Fire Stone",     "Ice Stone",      "Maranga Berry", "Pink Apricorn",
+            };
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly = new []
+            {
+                "Absorb Bulb",    "Chesto Berry",   "Genius Feather", "Jaboca Berry",  "Misty Seed",     "Pomeg Berry",    "Roseli Berry",  "Swift Feather",
+                "Aguav Berry",    "Chople Berry",   "Grassy Seed",    "Kasib Berry",   "Moon Stone",     "Pretty Feather", "Rowap Berry",   "Tanga Berry",
+                "Aspear Berry",   "Clever Feather", "Green Apricorn", "Kebia Berry",   "Muscle Feather", "Protein",        "Rusted Shield", "Thunder Stone",
+                "Babiri Berry",   "Coba Berry",     "Grepa Berry",    "Kee Berry",     "Occa Berry",     "Qualot Berry",   "Rusted Sword",  "Tiny Mushroom",
+                "Big Root",       "Colbur Berry",   "HP Up",          "Kelpsy Berry",  "Odd Incense",    "Rawst Berry",    "Sea Incense",   "Wacan Berry",
+                "Binding Band",   "Dusk Stone",     "Haban Berry",    "Leaf Stone",    "Oran Berry",     "Red Apricorn",   "Shiny Stone",   "Water Stone",
+                "Black Apricorn", "Dynamax Candy",  "Health Feather", "Leppa Berry",   "Passho Berry",   "Repel",          "Shuca Berry",   "Wave Incense",
+                "Blue Apricorn",  "Electric Seed",  "Hondew Berry",   "Lum Berry",     "Pearl",          "Resist Feather", "Snowball",      "Wiki Berry",
+                "Calcium",        "Figy Berry",     "Honey",          "Luminous Moss", "Pecha Berry",    "Rindo Berry",    "Stardust",      "Yache Berry",
+                "Carbos",         "Fire Stone",     "Iapapa Berry",   "Mago Berry",    "Persim Berry",   "Rock Incense",   "Sun Stone",     "Yellow Apricorn",
+                "Charti Berry",   "Float Stone",    "Ice Stone",      "Maranga Berry", "Pink Apricorn",  "Rose Incense",   "Super Repel",   "Zinc",
+                "Cheri Berry",    "Galarica Twig",  "Iron",           "Max Repel",     "Pixie Plate",
+            };
+
+            var filtererGroup_2InputItemsAlreadyChosen_IncludingARockTypeItem =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_2Items_IncludingARockTypeItem
+                );
+            var filtererGroup_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_2Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                );
+            var filtererGroup_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_2Items_ConsistingOfPsychicTypeItemsOnly
+                );
+            var filtererGroup_3InputItemsAlreadyChosen_IncludingARockTypeItem =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_3Items_IncludingARockTypeItem
+                );
+            var filtererGroup_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_3Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                );
+            var filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly
+                );
+
+            foreach (var item in Items.InputItems)
+            {
+                bool canCompleteRecipe_Expected_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                        .Contains(item.Name);
+                bool canCompleteRecipe_Expected_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
+                        .Contains(item.Name);
+
+                bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem =
+                    filtererGroup_2InputItemsAlreadyChosen_IncludingARockTypeItem
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                    filtererGroup_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                    filtererGroup_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_IncludingARockTypeItem =
+                    filtererGroup_3InputItemsAlreadyChosen_IncludingARockTypeItem
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                    filtererGroup_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                    filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
+                        .CanCompleteAnyRecipeUsingItem(item);
+
+                Assert.IsTrue(
+                    canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem,
+                    $"[{item.Name}, 2 already-chosen input items including a Rock-type item]"
+                );
+                Assert.IsTrue(
+                    canCompleteRecipe_Actual_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
+                    $"[{item.Name}, 2 already-chosen input items not including a Rock-type item but including an item that is neither Normal-type nor Psychic-type]"
+                );
+                Assert.IsTrue(
+                    canCompleteRecipe_Actual_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly,
+                    $"[{item.Name}, 2 already-chosen input items consisting of Psychic-type items only]"
+                );
+
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
+                    canCompleteRecipe_Actual_3InputItemsAlreadyChosen_IncludingARockTypeItem,
+                    $"[{item.Name}, 3 already-chosen input items including a Rock-type item]"
+                );
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
+                    canCompleteRecipe_Actual_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
+                    $"[{item.Name}, 3 already-chosen input items not including a Rock-type item but including an item that is neither Normal-type nor Psychic-type]"
+                );
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly,
+                    canCompleteRecipe_Actual_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly,
+                    $"[{item.Name}, 3 already-chosen input items consisting of Psychic-type items only]"
+                );
+            }
+        }
+
+        [TestMethod]
+        public void CompletionOfAWishingPieceRecipeWhenTotalValueOf2Or3AlreadyChosenInputsIs25()
+        {
+            var alreadyChosenInputs_2Items_IncludingARockTypeItem =
+                ItemNamesToItems("Rare Candy", "Lagging Tail");
+            var alreadyChosenInputs_2Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                ItemNamesToItems("Rare Candy", "Black Sludge");
+            var alreadyChosenInputs_2Items_ConsistingOfPsychicTypeItemsOnly =
+                ItemNamesToItems("Rare Candy", "Exp. Candy XL");
+            var alreadyChosenInputs_3Items_IncludingARockTypeItem =
+                ItemNamesToItems("Rare Candy", "Lagging Tail", "White Apricorn");
+            var alreadyChosenInputs_3Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                ItemNamesToItems("Rare Candy", "Exp. Candy XL", "Blue Apricorn");
+            var alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly =
+                ItemNamesToItems("Rare Candy", "Exp. Candy S", "Exp. Candy M");
+
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                new [] {"Black Apricorn", "Blue Apricorn", "Green Apricorn", "Pink Apricorn", "Red Apricorn", "White Apricorn", "Yellow Apricorn"};
+            var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                new [] {"Black Apricorn", "Blue Apricorn", "Green Apricorn", "Pink Apricorn", "Red Apricorn", "Yellow Apricorn"};
+
+            var filtererGroup_2InputItemsAlreadyChosen_IncludingARockTypeItem =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_2Items_IncludingARockTypeItem
+                );
+            var filtererGroup_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_2Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                );
+            var filtererGroup_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_2Items_ConsistingOfPsychicTypeItemsOnly
+                );
+            var filtererGroup_3InputItemsAlreadyChosen_IncludingARockTypeItem =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_3Items_IncludingARockTypeItem
+                );
+            var filtererGroup_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_3Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                );
+            var filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                new StandardRecipeGroupItemFilterer(
+                    Recipes.StandardRecipes["Wishing Piece"],
+                    alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly
+                );
+
+            foreach (var item in Items.InputItems)
+            {
+                bool canCompleteRecipe_Expected_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                        .Contains(item.Name);
+                bool canCompleteRecipe_Expected_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                    namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
+                        .Contains(item.Name);
+
+                bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem =
+                    filtererGroup_2InputItemsAlreadyChosen_IncludingARockTypeItem
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                    filtererGroup_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                    filtererGroup_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_IncludingARockTypeItem =
+                    filtererGroup_3InputItemsAlreadyChosen_IncludingARockTypeItem
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
+                    filtererGroup_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
+                        .CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
+                    filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
+                        .CanCompleteAnyRecipeUsingItem(item);
+
+                Assert.IsTrue(
+                    canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem,
+                    $"[{item.Name}, 2 already-chosen input items including a Rock-type item]"
+                );
+                Assert.IsTrue(
+                    canCompleteRecipe_Actual_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
+                    $"[{item.Name}, 2 already-chosen input items not including a Rock-type item but including an item that is neither Normal-type nor Psychic-type]"
+                );
+                Assert.IsTrue(
+                    canCompleteRecipe_Actual_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly,
+                    $"[{item.Name}, 2 already-chosen input items consisting of Psychic-type items only]"
+                );
+
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
+                    canCompleteRecipe_Actual_3InputItemsAlreadyChosen_IncludingARockTypeItem,
+                    $"[{item.Name}, 3 already-chosen input items including a Rock-type item]"
+                );
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
+                    canCompleteRecipe_Actual_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
+                    $"[{item.Name}, 3 already-chosen input items not including a Rock-type item but including an item that is neither Normal-type nor Psychic-type]"
+                );
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly,
+                    canCompleteRecipe_Actual_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly,
+                    $"[{item.Name}, 3 already-chosen input items consisting of Psychic-type items only]"
                 );
             }
         }
