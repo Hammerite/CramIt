@@ -12,7 +12,7 @@ namespace CramIt.Core
         public StandardRecipeItemFilterer(StandardRecipe targetRecipe): this(targetRecipe, new Item[0])
         {}
 
-        public StandardRecipeItemFilterer(StandardRecipe targetRecipe, IReadOnlyList<Item> alreadyChosenInputs)
+        public StandardRecipeItemFilterer(StandardRecipe targetRecipe, IEnumerable<Item> alreadyChosenInputs)
         {
             if (targetRecipe is null)
             {
@@ -23,20 +23,21 @@ namespace CramIt.Core
             {
                 throw new ArgumentNullException(nameof(alreadyChosenInputs));
             }
-            if (alreadyChosenInputs.Any(input => input is null))
+            var alreadyChosenInputs_List = alreadyChosenInputs.ToList();
+            if (alreadyChosenInputs_List.Any(input => input is null))
             {
                 throw new ArgumentException("Elements must not be null", nameof(alreadyChosenInputs));
             }
-            if (alreadyChosenInputs.Any(input => ! input.CanBeInput))
+            if (alreadyChosenInputs_List.Any(input => ! input.CanBeInput))
             {
                 throw new ArgumentException("Elements must be usable as input", nameof(alreadyChosenInputs));
             }
-            if (alreadyChosenInputs.Count >= NumberOfItemsPerBatch)
+            if (alreadyChosenInputs_List.Count >= NumberOfItemsPerBatch)
             {
                 throw new ArgumentException($"Must contain fewer than {NumberOfItemsPerBatch} elements", nameof(alreadyChosenInputs));
             }
 
-            _typedInputRequired = ! alreadyChosenInputs.Any(input => targetRecipe.Types.Contains(input.Type));
+            _typedInputRequired = ! alreadyChosenInputs_List.Any(input => targetRecipe.Types.Contains(input.Type));
             if (_typedInputRequired)
             {
                 _placatoryTypes = targetRecipe.Types;
@@ -44,9 +45,9 @@ namespace CramIt.Core
                 _maximumValueOfItemOfPlacatoryType = _placatoryTypes.Max(type => _maximumItemValuePerType[type]);
             }
 
-            _numberOfAdditionalInputsRequired = NumberOfItemsPerBatch - alreadyChosenInputs.Count;
+            _numberOfAdditionalInputsRequired = NumberOfItemsPerBatch - alreadyChosenInputs_List.Count;
 
-            int totalValueContributionOfAlreadyChosenInputs = alreadyChosenInputs.Sum(input => input.Value);
+            int totalValueContributionOfAlreadyChosenInputs = alreadyChosenInputs_List.Sum(input => input.Value);
             _minimumRequiredValueContributionOfAdditionalInputs    = targetRecipe.MinimumTotalValue - totalValueContributionOfAlreadyChosenInputs;
             _maximumPermissibleValueContributionOfAdditionalInputs = targetRecipe.MaximumTotalValue - totalValueContributionOfAlreadyChosenInputs;
         }

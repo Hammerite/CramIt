@@ -288,7 +288,7 @@ namespace CramIt.Core
                 {"Sport Ball",  BR_SportBall },
             };
 
-            IEnumerable<BRAC> AlternativeOutcomes_247(string b247, string b10)
+            static IEnumerable<BRAC> AlternativeOutcomes_247(string b247, string b10)
             {
                 yield return new BRAC($"Pok\u00e9 Ball", 247);
                 yield return new BRAC($"Great Ball",     247);
@@ -298,7 +298,7 @@ namespace CramIt.Core
                 yield return new BRAC($"Sport Ball",       1);
             }
 
-            IEnumerable<BRAC> AlternativeOutcomes_10(string b247a, string b247b)
+            static IEnumerable<BRAC> AlternativeOutcomes_10(string b247a, string b247b)
             {
                 yield return new BRAC($"Pok\u00e9 Ball", 247);
                 yield return new BRAC($"Great Ball",     247);

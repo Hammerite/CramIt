@@ -9,7 +9,7 @@ namespace CramIt.Core
         public StandardRecipeGroupItemFilterer(IEnumerable<StandardRecipe> targetRecipes): this(targetRecipes, new Item[0])
         {}
 
-        public StandardRecipeGroupItemFilterer(IEnumerable<StandardRecipe> targetRecipes, IReadOnlyList<Item> alreadyChosenInputs)
+        public StandardRecipeGroupItemFilterer(IEnumerable<StandardRecipe> targetRecipes, IEnumerable<Item> alreadyChosenInputs)
         {
             if (targetRecipes is null)
             {
