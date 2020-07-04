@@ -161,7 +161,25 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CompletionOfAnAirBalloonRecipeWhenTotalValueOf3AlreadyChosenInputsIs25()
+        public void Given2AlreadyChosenInputsNeitherOfWhichIsWaterTypeAndHavingATotalValueOf33CanCompleteTheMysticWaterRecipeUsingAnApricornIfAndOnlyIfItIsABlueApricorn()
+        {
+            var alreadyChosenInputItems = ItemNamesToItems("Rare Candy", "Razor Claw");
+            var apricornColourNames     = new [] {"Black", "Blue", "Green", "Pink", "Red", "White", "Yellow"};
+
+            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Mystic Water"], alreadyChosenInputItems);
+
+            foreach (string colourName in apricornColourNames)
+            {
+                bool canCompleteRecipe_Expected = colourName == "Blue";
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAWaterTypeItem_Actual =
+                    filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName[$"{colourName} Apricorn"]);
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected, canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAWaterTypeItem_Actual, $"[{colourName} Apricorn]");
+            }
+        }
+
+        [TestMethod]
+        public void CompletionOfAnAirBalloonRecipeWhenTheTotalValueOf3AlreadyChosenInputsIs25()
         {
             var alreadyChosenInputItems_IncludingAFlyingTypeItem    = ItemNamesToItems("Rare Candy", "Wacan Berry", "Swift Feather");
             var alreadyChosenInputItems_NotIncludingAFlyingTypeItem = ItemNamesToItems("Rare Candy", "Wacan Berry", "Dusk Stone"   );
@@ -225,7 +243,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CompletionOfASnowballRecipeWhenTotalValueOf2AlreadyChosenInputsIs9()
+        public void CompletionOfASnowballRecipeWhenTheTotalValueOf2AlreadyChosenInputsIs9()
         {
             var alreadyChosenInputItems_IncludingAnIceTypeItem    = ItemNamesToItems("Heat Rock", "Ice Stone" );
             var alreadyChosenInputItems_NotIncludingAnIceTypeItem = ItemNamesToItems("Heat Rock", "Dusk Stone");
@@ -248,16 +266,13 @@ namespace Tests
             };
             var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem = new []
             {
-                "Ability Capsule", "Bottle Cap",   "Destiny Knot",    "Flower Sweet",    "King's Rock",   "Poison Memory",  "Red Apricorn",     "Sweet Apple",
-                "Amulet Coin",     "Bug Memory",   "Dragon Memory",   "Flying Memory",   "Love Sweet",    "Prism Scale",    "Ribbon Sweet",     "Tart Apple",
-                "Armorite Ore",    "Charcoal",     "Dubious Disc",    "Ghost Memory",    "Macho Brace",   "Protector",      "Rock Memory",      "Upgrade",
-                "Aspear Berry",    "Chipped Pot",  "Electric Memory", "Gold Bottle Cap", "Metal Coat",    "Psychic Memory", "Rocky Helmet",     "Water Memory",
-                "Balm Mushroom",   "Cleanse Tag",  "Eviolite",        "Grass Memory",    "PP Max",        "Quick Claw",     "Room Service",     "Weakness Policy",
-                "Berry Sweet",     "Clover Sweet", "Expert Belt",     "Green Apricorn",  "PP Up",         "Quick Powder",   "Spell Tag",        "Whipped Dream",
-                "Big Nugget",      "Comet Shard",  "Fairy Memory",    "Grip Claw",       "Pearl String",  "Rare Candy",     "Star Sweet",       "White Apricorn",
-                "Black Apricorn",  "Cracked Pot",  "Fighting Memory", "Ground Memory",   "Pink Apricorn", "Razor Claw",     "Steel Memory",     "Wishing Piece",
-                "Blue Apricorn",   "Dark Memory",  "Fire Memory",     "Ice Memory",      "Poison Barb",   "Reaper Cloth",   "Strawberry Sweet", "Yellow Apricorn",
-                "Blunder Policy",
+                "Amulet Coin",    "Blue Apricorn",  "Cracked Pot",    "Grip Claw",   "Pearl String",  "Quick Powder", "Room Service",     "Upgrade",
+                "Armorite Ore",   "Blunder Policy", "Destiny Knot",   "Ice Memory",  "Pink Apricorn", "Razor Claw",   "Spell Tag",        "Weakness Policy",
+                "Aspear Berry",   "Charcoal",       "Dubious Disc",   "King's Rock", "Poison Barb",   "Reaper Cloth", "Star Sweet",       "Whipped Dream",
+                "Balm Mushroom",  "Chipped Pot",    "Eviolite",       "Love Sweet",  "Prism Scale",   "Red Apricorn", "Strawberry Sweet", "White Apricorn",
+                "Berry Sweet",    "Cleanse Tag",    "Expert Belt",    "Macho Brace", "Protector",     "Ribbon Sweet", "Sweet Apple",      "Wishing Piece",
+                "Big Nugget",     "Clover Sweet",   "Flower Sweet",   "Metal Coat",  "Quick Claw",    "Rocky Helmet", "Tart Apple",       "Yellow Apricorn",
+                "Black Apricorn", "Comet Shard",    "Green Apricorn", "PP Up",
             };
 
             var filtererGroup_AlreadyChosenInputItemsIncludeAnIceTypeItem =
@@ -290,7 +305,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CompletionOfAStrawberrySweetRecipeWhenTotalValueOf3AlreadyChosenInputsIs50()
+        public void CompletionOfAStrawberrySweetRecipeWhenTheTotalValueOf3AlreadyChosenInputsIs50()
         {
             var alreadyChosenInputItems_IncludingAFairyTypeItem    = ItemNamesToItems("Rare Candy", "Rare Candy", "Sachet"    );
             var alreadyChosenInputItems_NotIncludingAFairyTypeItem = ItemNamesToItems("Rare Candy", "Rare Candy", "Light Clay");
@@ -343,7 +358,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CompletionOfAWishingPieceRecipeWhenTotalValueOf2Or3AlreadyChosenInputsIs21()
+        public void CompletionOfAWishingPieceRecipeWhenTheTotalValueOf2Or3AlreadyChosenInputsIs21()
         {
             var alreadyChosenInputs_2Items_IncludingARockTypeItem =
                 ItemNamesToItems("Rare Candy", "Rock Incense");
@@ -358,6 +373,13 @@ namespace Tests
             var alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly =
                 ItemNamesToItems("Light Clay", "Light Clay", "Exp. Candy XS");
 
+            var namesOfInputItemsThatCannotCompleteOneOfTheRecipes_2InputItemsAlreadyChosen_NotIncludingARockTypeItem = new []
+            {
+                "Life Orb",   "Choice Band",  "Power Belt",   "Air Balloon",      "Soft Sand",    "Choice Specs", "Assault Vest", "Silk Scarf",
+                "Light Ball", "Power Anklet", "Power Bracer", "Utility Umbrella", "Choice Scarf", "Light Clay",   "Wide Lens",    "Smoke Ball",
+                "Magnet",     "Power Band",   "Power Weight", "Leftovers",        "Lucky Egg",    "Power Lens",   "Zoom Lens",    "Metronome",
+                "Sachet",
+            };
             var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType = new []
             {
                 "Absorb Bulb",    "Chople Berry",   "Float Stone",    "Iron",          "Max Repel",      "Pixie Plate",    "Rose Incense",  "Swift Feather",
@@ -424,6 +446,8 @@ namespace Tests
 
             foreach (var item in Items.InputItems)
             {
+                bool canCompleteRecipe_Expected_2InputItemsAlreadyChosen_NotIncludingARockTypeItem =
+                    ! namesOfInputItemsThatCannotCompleteOneOfTheRecipes_2InputItemsAlreadyChosen_NotIncludingARockTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_Expected_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                     namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType
                         .Contains(item.Name);
@@ -454,11 +478,13 @@ namespace Tests
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem,
                     $"[{item.Name}, 2 already-chosen input items including a Rock-type item]"
                 );
-                Assert.IsTrue(
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_2InputItemsAlreadyChosen_NotIncludingARockTypeItem,
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
                     $"[{item.Name}, 2 already-chosen input items not including a Rock-type item but including an item that is neither Normal-type nor Psychic-type]"
                 );
-                Assert.IsTrue(
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_2InputItemsAlreadyChosen_NotIncludingARockTypeItem,
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly,
                     $"[{item.Name}, 2 already-chosen input items consisting of Psychic-type items only]"
                 );
@@ -482,7 +508,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void CompletionOfAWishingPieceRecipeWhenTotalValueOf2Or3AlreadyChosenInputsIs25()
+        public void CompletionOfAWishingPieceRecipeWhenTheTotalValueOf2Or3AlreadyChosenInputsIs25()
         {
             var alreadyChosenInputs_2Items_IncludingARockTypeItem =
                 ItemNamesToItems("Rare Candy", "Lagging Tail");
@@ -497,6 +523,14 @@ namespace Tests
             var alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly =
                 ItemNamesToItems("Rare Candy", "Exp. Candy S", "Exp. Candy M");
 
+            var namesOfInputItemsThatCannotCompleteOneOfTheRecipes_2InputItemsAlreadyChosen_NotIncludingARockTypeItem = new []
+            {
+                "Scope Lens",      "Heat Rock",      "Rare Bone",        "Petaya Berry", "Black Glasses", "Black Belt",   "Mental Herb",    "Toxic Orb",
+                "Focus Band",      "Adrenaline Orb", "Terrain Extender", "Big Pearl",    "Ring Target",   "Muscle Band",  "Miracle Seed",   "Metal Powder",
+                "Focus Sash",      "Liechi Berry",   "Ganlon Berry",     "Damp Rock",    "Cell Battery",  "Flame Orb",    "White Herb",     "Soothe Bell",
+                "Protective Pads", "Apicot Berry",   "Icy Rock",         "Throat Spray", "Bright Powder", "Big Mushroom", "Never-Melt Ice", "Shell Bell",
+                "Salac Berry",
+            };
             var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                 new [] {"Black Apricorn", "Blue Apricorn", "Green Apricorn", "Pink Apricorn", "Red Apricorn", "White Apricorn", "Yellow Apricorn"};
             var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
@@ -535,6 +569,8 @@ namespace Tests
 
             foreach (var item in Items.InputItems)
             {
+                bool canCompleteRecipe_Expected_2InputItemsAlreadyChosen_NotIncludingARockTypeItem =
+                    ! namesOfInputItemsThatCannotCompleteOneOfTheRecipes_2InputItemsAlreadyChosen_NotIncludingARockTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_Expected_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                     namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType
                         .Contains(item.Name);
@@ -565,11 +601,13 @@ namespace Tests
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem,
                     $"[{item.Name}, 2 already-chosen input items including a Rock-type item]"
                 );
-                Assert.IsTrue(
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_2InputItemsAlreadyChosen_NotIncludingARockTypeItem,
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType,
                     $"[{item.Name}, 2 already-chosen input items not including a Rock-type item but including an item that is neither Normal-type nor Psychic-type]"
                 );
-                Assert.IsTrue(
+                Assert.AreEqual(
+                    canCompleteRecipe_Expected_2InputItemsAlreadyChosen_NotIncludingARockTypeItem,
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly,
                     $"[{item.Name}, 2 already-chosen input items consisting of Psychic-type items only]"
                 );

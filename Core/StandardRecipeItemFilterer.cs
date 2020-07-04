@@ -87,6 +87,13 @@ namespace CramIt.Core
             int minimumRequiredValueContributionFromAdditionalInputs    = _minimumRequiredValueContributionOfAdditionalInputs    - item.Value;
             int maximumPermissibleValueContributionFromAdditionalInputs = _maximumPermissibleValueContributionOfAdditionalInputs - item.Value;
 
+            if (numberOfAdditionalInputsRequired == 1 && typedInputRequired)
+            {
+                return Items.InputItems.Any(x => _placatoryTypes.Contains(x.Type)
+                                              && x.Value >= minimumRequiredValueContributionFromAdditionalInputs
+                                              && x.Value <= maximumPermissibleValueContributionFromAdditionalInputs);
+            }
+
             int minimumValueContributionFromAdditionalItems = 0;
             int maximumValueContributionFromAdditionalItems = 0;
 
