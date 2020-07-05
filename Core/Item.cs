@@ -16,6 +16,21 @@ namespace CramIt.Core
         public override string ToString()
             => Name + (TRMoveName is null ? "" : $" {TRMoveName}");
 
+        public string NameForHtmlId
+            => Name.ToLowerInvariant().Replace(' ', '-').Replace('\u00e9', 'e');
+
+        public string HtmlSpriteStyle
+        {
+            get
+            {
+                const int spriteWidth  = 24;
+                const int spriteHeight = 24;
+                int offset_X = -spriteWidth  * SpriteColumnIndex;
+                int offset_Y = -spriteHeight * SpriteRowIndex;
+                return $"background-position: {offset_X}px {offset_Y}px;";
+            }
+        }
+
         public static Item Input(string name, int spriteRowIndex, int spriteColumnIndex, Type type, int value)
         {
             const int maxItemValue = 20;

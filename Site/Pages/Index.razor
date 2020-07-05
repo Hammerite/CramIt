@@ -1,0 +1,33 @@
+﻿@inherits IndexBase
+@page "/"
+
+<h1>CRAM IT!</h1>
+
+<p>@UserMessage</p>
+
+@switch (Mode)
+{
+    case Mode.SelectingDesiredOutput:
+        <div class="item-choice-list">
+            @foreach (var recipe in Recipes.StandardRecipes)
+            {
+                var divId = $"recipe-choice-{recipe.Value.First().Item.NameForHtmlId}";
+                <div class="item-choice-outer recipe-choice" id="@divId" @onclick="() => ItemClicked(recipe.Value.First().Item)">
+                    <div class="item-choice-inner">
+                        <div class="item-sprite" style="@recipe.Value.First().Item.HtmlSpriteStyle"></div>
+                        <br />
+                        @recipe.Value.First().Item.ToString()
+                    </div>
+                </div>
+            }
+        </div>
+        break;
+    case Mode.SelectingInputs:
+
+        break;
+    case Mode.SelectionComplete:
+
+        break;
+    default:
+        throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
+}
