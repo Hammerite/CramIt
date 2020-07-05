@@ -50,6 +50,14 @@ namespace CramIt.Core
             int totalValueContributionOfAlreadyChosenInputs = alreadyChosenInputs_List.Sum(input => input.Value);
             _minimumRequiredValueContributionOfAdditionalInputs    = targetRecipe.MinimumTotalValue - totalValueContributionOfAlreadyChosenInputs;
             _maximumPermissibleValueContributionOfAdditionalInputs = targetRecipe.MaximumTotalValue - totalValueContributionOfAlreadyChosenInputs;
+
+            if (alreadyChosenInputs_List.Count == 3
+            &&  alreadyChosenInputs.Distinct().Count() == 1
+            &&  Recipes.RepeatedItemRecipes.Any(recipe => recipe.Key != targetRecipe.Item.Name
+            &&  recipe.Value == alreadyChosenInputs_List[0]))
+            {
+                _disallowed4thItem = alreadyChosenInputs_List[0];
+            }
         }
 
         private bool _typedInputRequired;
@@ -61,6 +69,8 @@ namespace CramIt.Core
 
         private int _minimumRequiredValueContributionOfAdditionalInputs;
         private int _maximumPermissibleValueContributionOfAdditionalInputs;
+
+        private Item _disallowed4thItem;
 
         public bool CanCompleteRecipeUsingItem(Item item)
         {
@@ -77,7 +87,7 @@ namespace CramIt.Core
 
             bool typedInputRequired = _typedInputRequired && ! _placatoryTypes.Contains(item.Type);
 
-            if (typedInputRequired && _numberOfAdditionalInputsRequired == 1)
+            if (_numberOfAdditionalInputsRequired == 1 && (typedInputRequired || item == _disallowed4thItem))
             {
                 return false;
             }

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace CramIt.Core
 {
-    public class Item
+    public class Item: IEquatable<Item>
     {
         public string Name              { get; }
         public string TRMoveName        { get; }
@@ -11,6 +12,9 @@ namespace CramIt.Core
         public bool   CanBeInput        { get; }
         public Type   Type              { get; }
         public int    Value             { get; }
+
+        public override string ToString()
+            => Name + (TRMoveName is null ? "" : $" {TRMoveName}");
 
         public static Item Input(string name, int spriteRowIndex, int spriteColumnIndex, Type type, int value)
         {
@@ -97,5 +101,37 @@ namespace CramIt.Core
             Type              = type;
             Value             = value;
         }
+
+        public override bool Equals(object that)
+            => Equals(that as Item);
+
+        public bool Equals(Item that)
+        {
+            if (that is null)
+            {
+                return false;
+            }
+
+            bool equal = Name == that.Name;
+
+            Debug.Assert( ! (equal && TRMoveName        != that.TRMoveName       ));
+            Debug.Assert( ! (equal && SpriteRowIndex    != that.SpriteRowIndex   ));
+            Debug.Assert( ! (equal && SpriteColumnIndex != that.SpriteColumnIndex));
+            Debug.Assert( ! (equal && CanBeInput        != that.CanBeInput       ));
+            Debug.Assert( ! (equal && Type              != that.Type             ));
+            Debug.Assert( ! (equal && Value             != that.Value            ));
+
+            Debug.Assert( ! (equal && GetHashCode() != that.GetHashCode()));
+            return equal;
+        }
+
+        public static bool operator ==(Item a, Item b)
+            => a is null ? b is null : a.Equals(b);
+
+        public static bool operator !=(Item a, Item b)
+            => ! (a == b);
+
+        public override int GetHashCode()
+            => Name.GetHashCode();
     }
 }

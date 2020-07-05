@@ -161,6 +161,14 @@ namespace Tests
         }
 
         [TestMethod]
+        public void CannotCompleteThePPUpRecipeWithARareCandyWhenThe3AlreadyChosenInputsAreAllRareCandies()
+        {
+            var alreadyChosenInputItems = ItemNamesToItems("Rare Candy", "Rare Candy", "Rare Candy");
+            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["PP Up"], alreadyChosenInputItems);
+            Assert.IsFalse(filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName["Rare Candy"]));
+        }
+
+        [TestMethod]
         public void Given2AlreadyChosenInputsNeitherOfWhichIsWaterTypeAndHavingATotalValueOf33CanCompleteTheMysticWaterRecipeUsingAnApricornIfAndOnlyIfItIsABlueApricorn()
         {
             var alreadyChosenInputItems = ItemNamesToItems("Rare Candy", "Razor Claw");
