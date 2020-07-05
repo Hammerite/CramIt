@@ -161,6 +161,107 @@ namespace Tests
         }
 
         [TestMethod]
+        public void GenericExample_3AlreadyChosenInputs()
+        {
+            var alreadyChosenInputItems_IncludingAFightingTypeItem    = ItemNamesToItems("Rare Candy", "Black Apricorn", "Armorite Ore");
+            var alreadyChosenInputItems_NotIncludingAFightingTypeItem = ItemNamesToItems("Rare Candy", "Black Apricorn", "Destiny Knot");
+
+            var namesOfInputItemsThatCanCompleteTheRecipe_AlreadyChosenInputsIncludeAFightingTypeItem = new []
+            {
+                "Absorb Bulb",    "Coba Berry",    "Fire Stone",       "Haban Berry",    "Lansat Berry",   "Passho Berry",    "Roseli Berry",   "Sticky Barb",
+                "Adrenaline Orb", "Colbur Berry",  "Float Stone",      "Health Feather", "Leaf Stone",     "Payapa Berry",    "Rowap Berry",    "Sun Stone",
+                "Aguav Berry",    "Custap Berry",  "Focus Band",       "Heat Rock",      "Liechi Berry",   "Pearl",           "Safety Goggles", "Swift Feather",
+                "Apicot Berry",   "Damp Rock",     "Focus Sash",       "Hondew Berry",   "Luminous Moss",  "Petaya Berry",    "Salac Berry",    "Tamato Berry",
+                "Babiri Berry",   "Dawn Stone",    "Fossilized Bird",  "Iapapa Berry",   "Mago Berry",     "Pomeg Berry",     "Scope Lens",     "Tanga Berry",
+                "Big Pearl",      "Dusk Stone",    "Fossilized Dino",  "Ice Stone",      "Maranga Berry",  "Power Herb",      "Sharp Beak",     "Terrain Extender",
+                "Big Root",       "Dynamax Candy", "Fossilized Drake", "Icy Rock",       "Micle Berry",    "Pretty Feather",  "Shed Shell",     "Throat Spray",
+                "Binding Band",   "Electric Seed", "Fossilized Fish",  "Iron",           "Misty Seed",     "Protective Pads", "Shiny Stone",    "Thunder Stone",
+                "Black Sludge",   "Enigma Berry",  "Galarica Twig",    "Jaboca Berry",   "Moon Stone",     "Protein",         "Shuca Berry",    "Wacan Berry",
+                "Calcium",        "Exp. Candy L",  "Ganlon Berry",     "Kasib Berry",    "Muscle Feather", "Psychic Seed",    "Silver Powder",  "Water Stone",
+                "Carbos",         "Exp. Candy M",  "Genius Feather",   "Kebia Berry",    "Mystic Water",   "Qualot Berry",    "Smooth Rock",    "Wiki Berry",
+                "Charti Berry",   "Exp. Candy S",  "Grassy Seed",      "Kee Berry",      "Normal Gem",     "Rare Bone",       "Snowball",       "Wise Glasses",
+                "Chilan Berry",   "Exp. Candy XL", "Grepa Berry",      "Kelpsy Berry",   "Occa Berry",     "Resist Feather",  "Stardust",       "Yache Berry",
+                "Chople Berry",   "Figy Berry",    "HP Up",            "Lagging Tail",   "Oval Stone",     "Rindo Berry",     "Starf Berry",    "Zinc",
+                "Clever Feather",
+            };
+            var namesOfInputItemsThatCanCompleteTheRecipe_AlreadyChosenInputsDoNotIncludeAFightingTypeItem = new []
+            {
+                "Calcium", "Chople Berry", "Focus Sash", "Iron",         "Protective Pads", "Protein", "Salac Berry", "Zinc",
+                "Carbos",  "Focus Band",   "HP Up",      "Kelpsy Berry",
+            };
+
+            var filtererGroup_AlreadyChosenInputItemsIncludeAFightingTypeItem =
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Macho Brace"], alreadyChosenInputItems_IncludingAFightingTypeItem);
+            var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem =
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Macho Brace"], alreadyChosenInputItems_NotIncludingAFightingTypeItem);
+
+            foreach (var item in Items.InputItems)
+            {
+                bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFightingTypeItem_Expected =
+                    namesOfInputItemsThatCanCompleteTheRecipe_AlreadyChosenInputsIncludeAFightingTypeItem.Contains(item.Name);
+                bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFightingTypeItem_Actual =
+                    filtererGroup_AlreadyChosenInputItemsIncludeAFightingTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                Assert.AreEqual(
+                    canCompleteRecipe_AlreadyChosenInputItemsIncludeAFightingTypeItem_Expected,
+                    canCompleteRecipe_AlreadyChosenInputItemsIncludeAFightingTypeItem_Actual,
+                    $"[{item.Name}, already-chosen input items include a Fighting-type item]"
+                );
+
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem_Expected =
+                    namesOfInputItemsThatCanCompleteTheRecipe_AlreadyChosenInputsDoNotIncludeAFightingTypeItem.Contains(item.Name);
+                bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem_Actual =
+                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                Assert.AreEqual(
+                    canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem_Expected,
+                    canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem_Actual,
+                    $"[{item.Name}, already-chosen input items do not include a Fighting-type item]"
+                );
+            }
+        }
+
+        [TestMethod]
+        public void CanCompleteTheBigMushroomRecipeUsingInputItemsOfSeveralTypes()
+        {
+            var alreadyChosenInputItems = ItemNamesToItems("Wide Lens", "Black Apricorn", "Black Apricorn");
+            var namesOfInputItemsThatCanCompleteTheRecipe = new []
+            {
+                "Apicot Berry",  "Dragon Fang",  "Fossilized Drake", "Lansat Berry", "Rare Bone", "Sharp Beak", "Terrain Extender", "Thick Club",
+                "Bright Powder", "Dragon Scale", "Heavy-Duty Boots", "Nugget",
+            };
+            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Big Mushroom"], alreadyChosenInputItems);
+
+            foreach (var item in Items.InputItems)
+            {
+                bool canCompleteRecipe_Expected = namesOfInputItemsThatCanCompleteTheRecipe.Contains(item.Name);
+                bool canCompleteRecipe_Actual   = filtererGroup.CanCompleteAnyRecipeUsingItem(item);
+                Assert.AreEqual(canCompleteRecipe_Expected, canCompleteRecipe_Actual, $"[{item.Name}]");
+            }
+        }
+
+        [TestMethod]
+        public void CanCompleteTheCometShardUsingInputItemsOfSeveralTypes()
+        {
+            var alreadyChosenInputItems = ItemNamesToItems("Rare Candy", "Rare Candy", "Weakness Policy");
+            var namesOfInputItemsThatCanCompleteTheRecipe = new []
+            {
+                "Absorb Bulb",    "Dusk Stone",      "Grepa Berry",    "Lansat Berry",   "Odd Incense",    "Rawst Berry",    "Shed Shell",    "Sticky Barb",
+                "Aspear Berry",   "Enigma Berry",    "Health Feather", "Leaf Stone",     "Persim Berry",   "Resist Feather", "Shuca Berry",   "Swift Feather",
+                "Big Root",       "Fossilized Dino", "Hondew Berry",   "Lum Berry",      "Pomeg Berry",    "Rindo Berry",    "Silver Powder", "Tanga Berry",
+                "Clever Feather", "Galarica Twig",   "Honey",          "Luminous Moss",  "Power Herb",     "Rose Incense",   "Snowball",      "Tiny Mushroom",
+                "Coba Berry",     "Genius Feather",  "Ice Stone",      "Mago Berry",     "Pretty Feather", "Sharp Beak",     "Stardust",      "Yache Berry",
+                "Custap Berry",   "Grassy Seed",     "Kasib Berry",    "Muscle Feather",
+            };
+            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Comet Shard"], alreadyChosenInputItems);
+
+            foreach (var item in Items.InputItems)
+            {
+                bool canCompleteRecipe_Expected = namesOfInputItemsThatCanCompleteTheRecipe.Contains(item.Name);
+                bool canCompleteRecipe_Actual   = filtererGroup.CanCompleteAnyRecipeUsingItem(item);
+                Assert.AreEqual(canCompleteRecipe_Expected, canCompleteRecipe_Actual, $"[{item.Name}]");
+            }
+        }
+
+        [TestMethod]
         public void CannotCompleteThePPUpRecipeWithARareCandyWhenThe3AlreadyChosenInputsAreAllRareCandies()
         {
             var alreadyChosenInputItems = ItemNamesToItems("Rare Candy", "Rare Candy", "Rare Candy");
