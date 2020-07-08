@@ -3,16 +3,13 @@
 
 <h1>CRAM IT!</h1>
 
-<p>@UserMessage</p>
-
 @switch (Mode)
 {
     case Mode.SelectingDesiredOutput:
         <div class="item-choice-list">
             @foreach (var recipe in Recipes.StandardRecipes)
             {
-                var divId = $"recipe-choice-{recipe.Value.First().Item.NameForHtmlId}";
-                <div class="item-choice-outer recipe-choice" id="@divId" @onclick="() => ItemClicked(recipe.Value.First().Item)">
+                <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
                     <div class="item-choice-inner">
                         <div class="item-sprite" style="@recipe.Value.First().Item.HtmlSpriteStyle"></div>
                         <br />
@@ -23,10 +20,55 @@
         </div>
         break;
     case Mode.SelectingInputs:
-
-        break;
     case Mode.SelectionComplete:
-
+        <div class="summary-panel">
+            <div class="item-choice-outer recipe-choice">
+                <div class="item-choice-inner">
+                    <div class="item-sprite" style="@TargetItem.HtmlSpriteStyle"></div>
+                    <br />
+                    @TargetItem.ToString()
+                </div>
+            </div>
+            <div class="already-chosen-items">
+                @for (int i = 0; i < NumberOfItemsPerBatch; ++i)
+                {
+                    if (InputItemSlots[i] is null)
+                    {
+                        <div class="chosen-item-slot-outer chosen-item-slot-outer-not-yet-chosen">
+                            <div class="item-sprite" style="@Item.PlaceholderHtmlSpriteStyle"></div>
+                            <div class="chosen-item-slot-name chosen-item-slot-name-not-yet-chosen">Not chosen yet</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="chosen-item-slot-outer chosen-item-slot-outer-already-chosen">
+                            <div class="item-sprite" style="@InputItemSlots[i].HtmlSpriteStyle"></div>
+                            <div class="chosen-item-slot-name chosen-item-slot-name-already-chosen">@InputItemSlots[i].ToString()</div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <button @onclick="Restart">Restart</button>
+        <div class="item-choice-list">
+            @if (Mode == Mode.SelectingInputs)
+            {
+                foreach (var inputItem in Items.InputItems)
+                {
+                    var viabilityClassName =
+                        StandardRecipeGroupItemFilterer.CanCompleteAnyRecipeUsingItem(inputItem) ?
+                        "input-item-choice-viable" :
+                        "input-item-choice-nonviable";
+                    <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemClicked(inputItem)">
+                        <div class="item-choice-inner">
+                            <div class="item-sprite" style="@inputItem.HtmlSpriteStyle"></div>
+                            <br />
+                            @inputItem.ToString()
+                        </div>
+                    </div>
+                }
+            }
+        </div>
         break;
     default:
         throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");

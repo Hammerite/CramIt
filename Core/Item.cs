@@ -31,6 +31,9 @@ namespace CramIt.Core
             }
         }
 
+        public static string PlaceholderHtmlSpriteStyle
+            => "background-position: 0px 0px;";
+
         public static Item Input(string name, int spriteRowIndex, int spriteColumnIndex, Type type, int value)
         {
             const int maxItemValue = 20;

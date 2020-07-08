@@ -2,6 +2,10 @@
     text-align: center;
 }
 
+.summary-panel {
+
+}
+
 .item-choice-list {
     /* Causes this div to have height such that it envelops its contents, instead of the
        height 0 it would otherwise have (because all of its contents are floats).
@@ -24,6 +28,14 @@
     cursor: default;
 }
 
+.input-item-choice-viable {
+    background-color: lawngreen;
+}
+
+.input-item-choice-nonviable {
+    background-color: gray;
+}
+
 /* The point of this "inner" div is to center its contents within the "outer" div. */
 .item-choice-inner {
     position: absolute;
@@ -38,4 +50,32 @@
     width: 24px;
     height: 24px;
     background-image: url('https://orderofthehammer.com/cram-it-item-sprites.png');
+}
+
+.already-chosen-items {
+    display: inline-block;
+}
+
+.chosen-item-slot-outer {
+    border: 1px solid black;
+}
+
+.chosen-item-slot-outer-not-yet-chosen {
+
+}
+
+.chosen-item-slot-outer-already-chosen {
+
+}
+
+.chosen-item-slot-name {
+    display: inline-block;
+}
+
+.chosen-item-slot-name-not-yet-chosen {
+    font-style: italic;
+}
+
+.chosen-item-slot-name-already-chosen {
+    font-weight: bold;
 }
