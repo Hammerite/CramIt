@@ -3,7 +3,9 @@
 }
 
 .summary-panel {
-
+    /* These two lines centre the panel horizontally. */
+    display: table;
+    margin: 0 auto;
 }
 
 .item-choice-list {
@@ -19,13 +21,18 @@
     float: left;
     position: relative; /* This is needed for the centering of the "inner" div. */
     width: 96px;
-    height: 72px;
+    height: 71px;
     margin: 4px;
     border: 1px solid black;
     background-color: blanchedalmond;
     text-align: center;
     font-size: 12px;
     cursor: default;
+}
+
+.target-item {
+    margin-top: 27px;
+    margin-right: 10px;
 }
 
 .input-item-choice-viable {
@@ -57,7 +64,15 @@
 }
 
 .chosen-item-slot-outer {
-    border: 1px solid black;
+    height: 31px;
+    border-style: solid;
+    border-color: black;
+    border-width: 0px 1px 1px 1px;
+}
+
+.chosen-item-slot-outer-first {
+    height: 32px;
+    border-top-width: 1px;
 }
 
 .chosen-item-slot-outer-not-yet-chosen {
@@ -68,8 +83,15 @@
 
 }
 
+.chosen-item-slot-icon {
+    margin: 3px;
+}
+
 .chosen-item-slot-name {
     display: inline-block;
+    vertical-align: 9px;
+    margin-right: 7px;
+    cursor: default;
 }
 
 .chosen-item-slot-name-not-yet-chosen {
