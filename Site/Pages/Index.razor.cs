@@ -64,6 +64,11 @@ namespace CramIt.Site.Pages
             Debug.Assert(inputItem.CanBeInput);
             Debug.Assert(AnyFreeInputItemSlots);
 
+            if ( ! StandardRecipeGroupItemFilterer.CanCompleteAnyRecipeUsingItem(inputItem))
+            {
+                return;
+            }
+
             InputItemSlots[FirstFreeInputItemSlotIndex] = inputItem;
 
             if (AnyFreeInputItemSlots)
