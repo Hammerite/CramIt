@@ -1,20 +1,5 @@
-﻿h1 {
-    text-align: center;
-}
-
-.summary-panel {
-    /* These two lines centre the panel horizontally. */
-    display: table;
-    margin: 0 auto;
-}
-
-.item-choice-list {
-    /* Causes this div to have height such that it envelops its contents, instead of the
-       height 0 it would otherwise have (because all of its contents are floats).
-       */
-    overflow: hidden;
-    /* Allow the bottom of the list to get nicely clear of the bottom of the browser window when the user scrolls all the way to the bottom. */
-    margin: 0px 0px 12px 0px;
+﻿.content {
+    padding-top: 0px;
 }
 
 .item-choice-outer {
@@ -30,19 +15,6 @@
     cursor: default;
 }
 
-.target-item {
-    margin-top: 27px;
-    margin-right: 10px;
-}
-
-.input-item-choice-viable {
-    background-color: lawngreen;
-}
-
-.input-item-choice-nonviable {
-    background-color: gray;
-}
-
 /* The point of this "inner" div is to center its contents within the "outer" div. */
 .item-choice-inner {
     position: absolute;
@@ -52,11 +24,29 @@
     padding: 0px 5px;
 }
 
-.item-sprite {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-image: url('https://orderofthehammer.com/cram-it-item-sprites.png');
+#sticky {
+    position: sticky;
+    top: 0px;
+    padding: 15px 0px 10px 0px;
+    width: 100%;
+    z-index: 1;
+    background-color: white;
+}
+
+h1 {
+    text-align: center;
+}
+
+.summary-panel {
+    /* These two lines centre the panel horizontally. */
+    display: table;
+    margin: 0 auto;
+}
+
+.target-item {
+    margin-top: 27px;
+    margin-left: 0px;
+    margin-right: 10px;
 }
 
 .already-chosen-items {
@@ -100,4 +90,36 @@
 
 .chosen-item-slot-name-already-chosen {
     font-weight: bold;
+}
+
+.restart-button {
+    position: relative;
+    top: -57px;
+    margin-left: 10px;
+    height: 29px;
+    border: 1px solid black;
+}
+
+.item-choice-list {
+    /* Causes this div to have height such that it envelops its contents, instead of the
+       height 0 it would otherwise have (because all of its contents are floats).
+       */
+    overflow: hidden;
+    /* Allow the bottom of the list to get nicely clear of the bottom of the browser window when the user scrolls all the way to the bottom. */
+    margin: 0px 0px 12px 0px;
+}
+
+.input-item-choice-viable {
+    background-color: lawngreen;
+}
+
+.input-item-choice-nonviable {
+    background-color: gray;
+}
+
+.item-sprite {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-image: url('https://orderofthehammer.com/cram-it-item-sprites.png');
 }

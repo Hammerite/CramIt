@@ -1,63 +1,74 @@
 ﻿@inherits IndexBase
 @page "/"
 
-<h1>CRAM IT!</h1>
+<div id="sticky">
+    <h1>CRAM IT!</h1>
 
-@switch (Mode)
-{
-    case Mode.SelectingDesiredOutput:
-        <div class="item-choice-list">
-            @foreach (var recipe in Recipes.StandardRecipes)
-            {
-                <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
+    @switch (Mode)
+    {
+        case Mode.SelectingDesiredOutput:
+            break;
+        case Mode.SelectingInputs:
+        case Mode.SelectionComplete:
+            <div class="summary-panel">
+                <div class="item-choice-outer recipe-choice target-item">
                     <div class="item-choice-inner">
-                        <div class="item-sprite" style="@recipe.Value.First().Item.HtmlSpriteStyle"></div>
+                        <div class="item-sprite" style="@TargetItem.HtmlSpriteStyle"></div>
                         <br />
-                        @recipe.Value.First().Item.ToString()
+                        @TargetItem.ToString()
                     </div>
                 </div>
-            }
-        </div>
-        break;
-    case Mode.SelectingInputs:
-    case Mode.SelectionComplete:
-        <div class="summary-panel">
-            <div class="item-choice-outer recipe-choice target-item">
-                <div class="item-choice-inner">
-                    <div class="item-sprite" style="@TargetItem.HtmlSpriteStyle"></div>
-                    <br />
-                    @TargetItem.ToString()
+                <div class="already-chosen-items">
+                    @for (int i = 0; i < NumberOfItemsPerBatch; ++i)
+                    {
+                        if (InputItemSlots[i] is null)
+                        {
+                            string outerDivClassList =
+                                "chosen-item-slot-outer chosen-item-slot-outer-not-yet-chosen" + (i == 0 ? " chosen-item-slot-outer-first" : "");
+                            <div class="@outerDivClassList">
+                                <div class="item-sprite chosen-item-slot-icon" style="@Item.PlaceholderHtmlSpriteStyle"></div>
+                                <div class="chosen-item-slot-name chosen-item-slot-name-not-yet-chosen">Not chosen yet</div>
+                            </div>
+                        }
+                        else
+                        {
+                            string outerDivClassList =
+                                "chosen-item-slot-outer chosen-item-slot-outer-already-chosen" + (i == 0 ? " chosen-item-slot-outer-first" : "");
+                            <div class="@outerDivClassList">
+                                <div class="item-sprite chosen-item-slot-icon" style="@InputItemSlots[i].HtmlSpriteStyle"></div>
+                                <div class="chosen-item-slot-name chosen-item-slot-name-already-chosen">@InputItemSlots[i].ToString()</div>
+                            </div>
+                        }
+                    }
                 </div>
+                <button @onclick="Restart" class="restart-button">Restart</button>
             </div>
-            <div class="already-chosen-items">
-                @for (int i = 0; i < NumberOfItemsPerBatch; ++i)
+            break;
+        default:
+            throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
+    }
+</div>
+
+<div>
+    @switch (Mode)
+    {
+        case Mode.SelectingDesiredOutput:
+            <div class="item-choice-list">
+                @foreach (var recipe in Recipes.StandardRecipes)
                 {
-                    if (InputItemSlots[i] is null)
-                    {
-                        string outerDivClassList =
-                            "chosen-item-slot-outer chosen-item-slot-outer-not-yet-chosen" + (i == 0 ? " chosen-item-slot-outer-first" : "");
-                        <div class="@outerDivClassList">
-                            <div class="item-sprite chosen-item-slot-icon" style="@Item.PlaceholderHtmlSpriteStyle"></div>
-                            <div class="chosen-item-slot-name chosen-item-slot-name-not-yet-chosen">Not chosen yet</div>
+                    <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
+                        <div class="item-choice-inner">
+                            <div class="item-sprite" style="@recipe.Value.First().Item.HtmlSpriteStyle"></div>
+                            <br />
+                            @recipe.Value.First().Item.ToString()
                         </div>
-                    }
-                    else
-                    {
-                        string outerDivClassList =
-                            "chosen-item-slot-outer chosen-item-slot-outer-already-chosen" + (i == 0 ? " chosen-item-slot-outer-first" : "");
-                        <div class="@outerDivClassList">
-                            <div class="item-sprite chosen-item-slot-icon" style="@InputItemSlots[i].HtmlSpriteStyle"></div>
-                            <div class="chosen-item-slot-name chosen-item-slot-name-already-chosen">@InputItemSlots[i].ToString()</div>
-                        </div>
-                    }
+                    </div>
                 }
             </div>
-        </div>
-        <button @onclick="Restart">Restart</button>
-        <div class="item-choice-list">
-            @if (Mode == Mode.SelectingInputs)
-            {
-                foreach (var inputItem in Items.InputItems)
+            break;
+        case Mode.SelectingInputs:
+            <div class="item-choice-list">
+                @foreach (var inputItem in Items.InputItems)
                 {
                     var viabilityClassName =
                         StandardRecipeGroupItemFilterer.CanCompleteAnyRecipeUsingItem(inputItem) ?
@@ -71,9 +82,11 @@
                         </div>
                     </div>
                 }
-            }
-        </div>
-        break;
-    default:
-        throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
-}
+            </div>
+            break;
+        case Mode.SelectionComplete:
+            break;
+        default:
+            throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
+    }
+</div>
