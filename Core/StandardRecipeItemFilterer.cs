@@ -77,6 +77,9 @@ namespace CramIt.Core
         public bool ItemIsViable(Item item)
             => CanCompleteRecipeUsingItem(item, out _);
 
+        public bool ItemIsOfPlacatoryType(Item item)
+            => _placatoryTypes.Contains(item.Type);
+
         public InputItemViabilityCategory ViabilityCategory(Item item)
         {
             bool viable = CanCompleteRecipeUsingItem(item, out bool isOfPlacatoryType);
@@ -104,7 +107,7 @@ namespace CramIt.Core
 
             Debug.Assert(_numberOfAdditionalInputsRequired >= 1);
 
-            isOfPlacatoryType = _placatoryTypes.Contains(item.Type);
+            isOfPlacatoryType = ItemIsOfPlacatoryType(item);
             bool typedInputRequired = TypedInputRequired && ! isOfPlacatoryType;
 
             if (_numberOfAdditionalInputsRequired == 1 && (typedInputRequired || item == _disallowed4thItem))

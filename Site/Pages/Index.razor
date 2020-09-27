@@ -32,11 +32,26 @@
                         }
                         else
                         {
-                            string outerDivClassList =
-                                "chosen-item-slot-outer chosen-item-slot-outer-already-chosen" + (i == 0 ? " chosen-item-slot-outer-first" : "");
-                            <div class="@outerDivClassList">
+                            var outerDivClassList = new List<string> {"chosen-item-slot-outer"};
+                            outerDivClassList.Add(
+                                StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAllRecipes(InputItemSlots[i]) ?
+                                    "chosen-item-slot-outer-already-chosen-of-placatory-type-for-all-recipes" :
+                                StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAnyRecipe(InputItemSlots[i]) ?
+                                    "chosen-item-slot-outer-already-chosen-of-placatory-type-for-some-but-not-all-recipes" :
+                                "chosen-item-slot-outer-already-chosen-not-of-placatory-type-for-any-recipe"
+                            );
+                            if (i == 0)
+                            {
+                                outerDivClassList.Add("chosen-item-slot-outer-first");
+                            }
+
+                            <div class="@string.Join(" ", outerDivClassList)">
                                 <div class="item-sprite chosen-item-slot-icon" style="@InputItemSlots[i].HtmlSpriteStyle"></div>
                                 <div class="chosen-item-slot-name chosen-item-slot-name-already-chosen">@InputItemSlots[i].ToString()</div>
+                                @{
+                                    int i_Uncaptured = i;
+                                }
+                                <button @onclick="() => InputItemUnchosen(i_Uncaptured)" class="unchoose-item-button">&times;</button>
                             </div>
                         }
                     }
@@ -76,7 +91,7 @@
                         viabilityClassName += StandardRecipeGroupItemFilterer.TypedInputRequiredForAnyRecipe ? "-type-matters" : "-type-doesnt-matter";
                     }
 
-                    <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemClicked(t.Item)">
+                    <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemChosen(t.Item)">
                         <div class="item-choice-inner">
                             <div class="item-sprite" style="@t.Item.HtmlSpriteStyle"></div>
                             <br />

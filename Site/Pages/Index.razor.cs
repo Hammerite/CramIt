@@ -52,7 +52,7 @@ namespace CramIt.Site.Pages
             StandardRecipeGroupItemFilterer = new StandardRecipeGroupItemFilterer(TargetRecipes);
         }
 
-        protected void InputItemClicked(Item inputItem)
+        protected void InputItemChosen(Item inputItem)
         {
             Debug.Assert(Mode == Mode.SelectingInputs);
 
@@ -71,14 +71,72 @@ namespace CramIt.Site.Pages
 
             InputItemSlots[FirstFreeInputItemSlotIndex] = inputItem;
 
+            SetModeAccordingToFreeItemSlots();
+            ReorderChosenItems();
+        }
+
+        protected void InputItemUnchosen(int slotIndex)
+        {
+            Debug.Assert(slotIndex >= 0);
+            Debug.Assert(slotIndex < NumberOfItemsPerBatch);
+
+            Debug.Assert( ! (InputItemSlots[slotIndex] is null));
+            InputItemSlots[slotIndex] = null;
+
+            SetModeAccordingToFreeItemSlots();
+            ReorderChosenItems();
+        }
+
+        private void SetModeAccordingToFreeItemSlots()
+        {
             if (AnyFreeInputItemSlots)
             {
                 StandardRecipeGroupItemFilterer = new StandardRecipeGroupItemFilterer(TargetRecipes, AlreadyChosenInputItems);
+                Mode = Mode.SelectingInputs;
             }
             else
             {
                 Mode = Mode.SelectionComplete;
             }
+        }
+
+        private void ReorderChosenItems()
+        {
+            MoveItemsEarlierWhen(slot => ! (slot is null), NumberOfItemsPerBatch);
+
+            MoveNonNullItemsEarlierWhen(slot => StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAllRecipes(slot));
+            MoveNonNullItemsEarlierWhen(slot => StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAnyRecipe (slot));
+        }
+
+        private void MoveNonNullItemsEarlierWhen(Predicate<Item> p)
+            => MoveItemsEarlierWhen(p, AlreadyChosenInputItems.Count());
+
+        private void MoveItemsEarlierWhen(Predicate<Item> p, int numberOfSlots)
+        {
+            for (int i = 0; i < numberOfSlots; ++i)
+            {
+                if ( ! p(InputItemSlots[i]))
+                {
+                    for (int j = i + 1; j < numberOfSlots; ++j)
+                    {
+                        if (p(InputItemSlots[j]))
+                        {
+                            for (int k = j; k > i; --k)
+                            {
+                                Swap(ref InputItemSlots[k], ref InputItemSlots[k - 1]);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Swap<T>(ref T t0, ref T t1)
+        {
+            T temp = t0;
+            t0 = t1;
+            t1 = temp;
         }
     }
 }

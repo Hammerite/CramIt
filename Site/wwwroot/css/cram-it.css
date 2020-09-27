@@ -1,4 +1,11 @@
-﻿.content {
+﻿body {
+    /* Make sure the vertical scrollbar is always present, so that horizontally-centered
+       content doesn't jump to the left or right when the mode changes.
+       */
+    overflow-y: scroll;
+}
+
+.content {
     padding-top: 0px;
 }
 
@@ -55,6 +62,7 @@ h1 {
 
 .chosen-item-slot-outer {
     height: 31px;
+    width: 204px;
     border-style: solid;
     border-color: black;
     border-width: 0px 1px 1px 1px;
@@ -66,11 +74,18 @@ h1 {
 }
 
 .chosen-item-slot-outer-not-yet-chosen {
-
 }
 
-.chosen-item-slot-outer-already-chosen {
+.chosen-item-slot-outer-already-chosen-not-of-placatory-type-for-any-recipe {
+    background-color: blanchedalmond;
+}
 
+.chosen-item-slot-outer-already-chosen-of-placatory-type-for-some-but-not-all-recipes {
+    background-color: #bfffdf;
+}
+
+.chosen-item-slot-outer-already-chosen-of-placatory-type-for-all-recipes {
+    background-color: lawngreen;
 }
 
 .chosen-item-slot-icon {
@@ -80,7 +95,6 @@ h1 {
 .chosen-item-slot-name {
     display: inline-block;
     vertical-align: 9px;
-    margin-right: 7px;
     cursor: default;
 }
 
@@ -92,12 +106,26 @@ h1 {
     font-weight: bold;
 }
 
+button {
+    border: 1px solid black;
+}
+
+.unchoose-item-button {
+    height: 20px;
+    float: right;
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
+    font-weight: bold;
+    line-height: 1.08em;
+}
+
 .restart-button {
     position: relative;
-    top: -57px;
+    top: -55px;
     margin-left: 10px;
     height: 29px;
-    border: 1px solid black;
+    padding-top: 3px;
 }
 
 .item-choice-list {

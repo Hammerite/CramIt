@@ -27,6 +27,12 @@ namespace CramIt.Core
         public bool ItemIsViableForAnyRecipe(Item item)
             => _itemFilterers.Any(f => f.ItemIsViable(item));
 
+        public bool ItemIsOfPlacatoryTypeForAnyRecipe(Item item)
+            => _itemFilterers.Any(f => f.ItemIsOfPlacatoryType(item));
+
+        public bool ItemIsOfPlacatoryTypeForAllRecipes(Item item)
+            => _itemFilterers.All(f => f.ItemIsOfPlacatoryType(item));
+
         public InputItemViabilityCategory BestViabilityCategory(Item item)
         {
             bool anyViable = false;
