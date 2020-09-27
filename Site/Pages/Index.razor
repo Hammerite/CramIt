@@ -68,17 +68,19 @@
             break;
         case Mode.SelectingInputs:
             <div class="item-choice-list">
-                @foreach (var inputItem in Items.InputItems)
+                @foreach (var t in Items.InputItems(StandardRecipeGroupItemFilterer).OrderByDescending(t => (int)(t.BestViabilityCategory)))
                 {
-                    var viabilityClassName =
-                        StandardRecipeGroupItemFilterer.CanCompleteAnyRecipeUsingItem(inputItem) ?
-                        "input-item-choice-viable" :
-                        "input-item-choice-nonviable";
-                    <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemClicked(inputItem)">
+                    string viabilityClassName = t.BestViabilityCategory.CssClassName("input-item-choice");
+                    if (t.BestViabilityCategory == InputItemViabilityCategory.Viable_OfPlacatoryType)
+                    {
+                        viabilityClassName += StandardRecipeGroupItemFilterer.TypedInputRequiredForAnyRecipe ? "-type-matters" : "-type-doesnt-matter";
+                    }
+
+                    <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemClicked(t.Item)">
                         <div class="item-choice-inner">
-                            <div class="item-sprite" style="@inputItem.HtmlSpriteStyle"></div>
+                            <div class="item-sprite" style="@t.Item.HtmlSpriteStyle"></div>
                             <br />
-                            @inputItem.ToString()
+                            @t.Item.ToString()
                         </div>
                     </div>
                 }

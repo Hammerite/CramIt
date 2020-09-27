@@ -30,7 +30,7 @@ namespace Tests
 
                 foreach (string colourName in apricornColourNames)
                 {
-                    bool canCompleteRecipe_Actual = filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName[$"{colourName} Apricorn"]);
+                    bool canCompleteRecipe_Actual = filtererGroup.ItemIsViableForAnyRecipe(Items.ItemsByName[$"{colourName} Apricorn"]);
                     Assert.AreEqual(canCompleteRecipe_Expected, canCompleteRecipe_Actual, $"[{recipeItemName}, {colourName} Apricorn]");
                 }
             }
@@ -61,7 +61,7 @@ namespace Tests
 
                 foreach (string inputItemName in namesOfValue11OrAboveInputItems)
                 {
-                    bool canCompleteRecipe_Actual = filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName[inputItemName]);
+                    bool canCompleteRecipe_Actual = filtererGroup.ItemIsViableForAnyRecipe(Items.ItemsByName[inputItemName]);
                     Assert.IsFalse(canCompleteRecipe_Actual, $"[{recipeItemName}, {inputItemName}]");
                 }
             }
@@ -89,7 +89,7 @@ namespace Tests
 
                 foreach (string inputItemName in namesOfValue16OrAboveInputItems)
                 {
-                    bool canCompleteRecipe_Actual = filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName[inputItemName]);
+                    bool canCompleteRecipe_Actual = filtererGroup.ItemIsViableForAnyRecipe(Items.ItemsByName[inputItemName]);
                     Assert.IsFalse(canCompleteRecipe_Actual, $"[{recipeItemName}, {inputItemName}]");
                 }
             }
@@ -117,7 +117,7 @@ namespace Tests
 
                 foreach (string inputItemName in namesOfValue20InputItems)
                 {
-                    bool canCompleteRecipe_Actual = filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName[inputItemName]);
+                    bool canCompleteRecipe_Actual = filtererGroup.ItemIsViableForAnyRecipe(Items.ItemsByName[inputItemName]);
                     Assert.IsTrue(canCompleteRecipe_Actual, $"[{recipeItemName}, {inputItemName}]");
                 }
             }
@@ -154,7 +154,7 @@ namespace Tests
                 foreach (string inputItemName in namesOfValue20InputItems)
                 {
                     bool canCompleteRecipe_Expected = compatibleValue20InputItems.Contains(inputItemName);
-                    bool canCompleteRecipe_Actual   = filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName[inputItemName]);
+                    bool canCompleteRecipe_Actual   = filtererGroup.ItemIsViableForAnyRecipe(Items.ItemsByName[inputItemName]);
                     Assert.AreEqual(canCompleteRecipe_Expected, canCompleteRecipe_Actual, $"[{recipeItemName}, {inputItemName}]");
                 }
             }
@@ -195,12 +195,12 @@ namespace Tests
             var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem =
                 new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Macho Brace"], alreadyChosenInputItems_NotIncludingAFightingTypeItem);
 
-            foreach (var item in Items.InputItems)
+            foreach (var item in Items.InputItems())
             {
                 bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFightingTypeItem_Expected =
                     namesOfInputItemsThatCanCompleteTheRecipe_AlreadyChosenInputsIncludeAFightingTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFightingTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputItemsIncludeAFightingTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                    filtererGroup_AlreadyChosenInputItemsIncludeAFightingTypeItem.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(
                     canCompleteRecipe_AlreadyChosenInputItemsIncludeAFightingTypeItem_Expected,
                     canCompleteRecipe_AlreadyChosenInputItemsIncludeAFightingTypeItem_Actual,
@@ -210,7 +210,7 @@ namespace Tests
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem_Expected =
                     namesOfInputItemsThatCanCompleteTheRecipe_AlreadyChosenInputsDoNotIncludeAFightingTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(
                     canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem_Expected,
                     canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem_Actual,
@@ -230,10 +230,10 @@ namespace Tests
             };
             var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Big Mushroom"], alreadyChosenInputItems);
 
-            foreach (var item in Items.InputItems)
+            foreach (var item in Items.InputItems())
             {
                 bool canCompleteRecipe_Expected = namesOfInputItemsThatCanCompleteTheRecipe.Contains(item.Name);
-                bool canCompleteRecipe_Actual   = filtererGroup.CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual   = filtererGroup.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(canCompleteRecipe_Expected, canCompleteRecipe_Actual, $"[{item.Name}]");
             }
         }
@@ -253,10 +253,10 @@ namespace Tests
             };
             var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Comet Shard"], alreadyChosenInputItems);
 
-            foreach (var item in Items.InputItems)
+            foreach (var item in Items.InputItems())
             {
                 bool canCompleteRecipe_Expected = namesOfInputItemsThatCanCompleteTheRecipe.Contains(item.Name);
-                bool canCompleteRecipe_Actual   = filtererGroup.CanCompleteAnyRecipeUsingItem(item);
+                bool canCompleteRecipe_Actual   = filtererGroup.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(canCompleteRecipe_Expected, canCompleteRecipe_Actual, $"[{item.Name}]");
             }
         }
@@ -266,7 +266,7 @@ namespace Tests
         {
             var alreadyChosenInputItems = ItemNamesToItems("Rare Candy", "Rare Candy", "Rare Candy");
             var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["PP Up"], alreadyChosenInputItems);
-            Assert.IsFalse(filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName["Rare Candy"]));
+            Assert.IsFalse(filtererGroup.ItemIsViableForAnyRecipe(Items.ItemsByName["Rare Candy"]));
         }
 
         [TestMethod]
@@ -281,7 +281,7 @@ namespace Tests
             {
                 bool canCompleteRecipe_Expected = colourName == "Blue";
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAWaterTypeItem_Actual =
-                    filtererGroup.CanCompleteAnyRecipeUsingItem(Items.ItemsByName[$"{colourName} Apricorn"]);
+                    filtererGroup.ItemIsViableForAnyRecipe(Items.ItemsByName[$"{colourName} Apricorn"]);
                 Assert.AreEqual(
                     canCompleteRecipe_Expected, canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAWaterTypeItem_Actual, $"[{colourName} Apricorn]");
             }
@@ -327,12 +327,12 @@ namespace Tests
             var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem =
                 new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], alreadyChosenInputItems_NotIncludingAFlyingTypeItem);
 
-            foreach (var item in Items.InputItems)
+            foreach (var item in Items.InputItems())
             {
                 bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFlyingTypeItem_Expected =
                     namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAFlyingTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFlyingTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputItemsIncludeAFlyingTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                    filtererGroup_AlreadyChosenInputItemsIncludeAFlyingTypeItem.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(
                     canCompleteRecipe_AlreadyChosenInputItemsIncludeAFlyingTypeItem_Expected,
                     canCompleteRecipe_AlreadyChosenInputItemsIncludeAFlyingTypeItem_Actual,
@@ -342,7 +342,7 @@ namespace Tests
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem_Expected =
                     namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(
                     canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem_Expected,
                     canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem_Actual,
@@ -389,12 +389,12 @@ namespace Tests
             var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem =
                 new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], alreadyChosenInputItems_NotIncludingAnIceTypeItem);
 
-            foreach (var item in Items.InputItems)
+            foreach (var item in Items.InputItems())
             {
                 bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAnIceTypeItem_Expected =
                     namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAnIceTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAnIceTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputItemsIncludeAnIceTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                    filtererGroup_AlreadyChosenInputItemsIncludeAnIceTypeItem.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(
                     canCompleteRecipe_AlreadyChosenInputItemsIncludeAnIceTypeItem_Expected,
                     canCompleteRecipe_AlreadyChosenInputItemsIncludeAnIceTypeItem_Actual,
@@ -404,7 +404,7 @@ namespace Tests
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem_Expected =
                     namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(
                     canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem_Expected,
                     canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem_Actual,
@@ -442,12 +442,12 @@ namespace Tests
             var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem =
                 new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Strawberry Sweet"], alreadyChosenInputItems_NotIncludingAFairyTypeItem);
 
-            foreach (var item in Items.InputItems)
+            foreach (var item in Items.InputItems())
             {
                 bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFairyTypeItem_Expected =
                     namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsIncludeAFairyTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_AlreadyChosenInputItemsIncludeAFairyTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputItemsIncludeAFairyTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                    filtererGroup_AlreadyChosenInputItemsIncludeAFairyTypeItem.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(
                     canCompleteRecipe_AlreadyChosenInputItemsIncludeAFairyTypeItem_Expected,
                     canCompleteRecipe_AlreadyChosenInputItemsIncludeAFairyTypeItem_Actual,
@@ -457,7 +457,7 @@ namespace Tests
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem_Expected =
                     namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem.Contains(item.Name);
                 bool canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem_Actual =
-                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem.CanCompleteAnyRecipeUsingItem(item);
+                    filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem.ItemIsViableForAnyRecipe(item);
                 Assert.AreEqual(
                     canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem_Expected,
                     canCompleteRecipe_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem_Actual,
@@ -553,7 +553,7 @@ namespace Tests
                     alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly
                 );
 
-            foreach (var item in Items.InputItems)
+            foreach (var item in Items.InputItems())
             {
                 bool canCompleteRecipe_Expected_2InputItemsAlreadyChosen_NotIncludingARockTypeItem =
                     ! namesOfInputItemsThatCannotCompleteOneOfTheRecipes_2InputItemsAlreadyChosen_NotIncludingARockTypeItem.Contains(item.Name);
@@ -566,22 +566,22 @@ namespace Tests
 
                 bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem =
                     filtererGroup_2InputItemsAlreadyChosen_IncludingARockTypeItem
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                     filtererGroup_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
                     filtererGroup_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_IncludingARockTypeItem =
                     filtererGroup_3InputItemsAlreadyChosen_IncludingARockTypeItem
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                     filtererGroup_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
                     filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
 
                 Assert.IsTrue(
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem,
@@ -676,7 +676,7 @@ namespace Tests
                     alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly
                 );
 
-            foreach (var item in Items.InputItems)
+            foreach (var item in Items.InputItems())
             {
                 bool canCompleteRecipe_Expected_2InputItemsAlreadyChosen_NotIncludingARockTypeItem =
                     ! namesOfInputItemsThatCannotCompleteOneOfTheRecipes_2InputItemsAlreadyChosen_NotIncludingARockTypeItem.Contains(item.Name);
@@ -689,22 +689,22 @@ namespace Tests
 
                 bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem =
                     filtererGroup_2InputItemsAlreadyChosen_IncludingARockTypeItem
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                     filtererGroup_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
                     filtererGroup_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_IncludingARockTypeItem =
                     filtererGroup_3InputItemsAlreadyChosen_IncludingARockTypeItem
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                     filtererGroup_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
                 bool canCompleteRecipe_Actual_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
                     filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
-                        .CanCompleteAnyRecipeUsingItem(item);
+                        .ItemIsViableForAnyRecipe(item);
 
                 Assert.IsTrue(
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem,

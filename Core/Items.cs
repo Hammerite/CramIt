@@ -10,8 +10,12 @@ namespace CramIt.Core
         public static IReadOnlyList<Item>               ItemList    { get; }
         public static IReadOnlyDictionary<string, Item> ItemsByName { get; }
 
-        public static IEnumerable<Item> InputItems
+        public static IEnumerable<Item> InputItems()
             => ItemList.Where(item => item.CanBeInput);
+
+        public static IEnumerable<(Item Item, InputItemViabilityCategory BestViabilityCategory)> InputItems(
+            StandardRecipeGroupItemFilterer standardRecipeGroupItemFilterer)
+            => InputItems().Select(item => (item, standardRecipeGroupItemFilterer.BestViabilityCategory(item)));
 
         static Items()
         {

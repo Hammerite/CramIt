@@ -109,12 +109,19 @@ h1 {
     margin: 0px 0px 12px 0px;
 }
 
-.input-item-choice-viable {
+.input-item-choice-nonviable {
+    background-color: gray;
+}
+
+.input-item-choice-viable-not-of-placatory-type {
+}
+
+.input-item-choice-viable-of-placatory-type-type-matters {
     background-color: lawngreen;
 }
 
-.input-item-choice-nonviable {
-    background-color: gray;
+.input-item-choice-viable-of-placatory-type-type-doesnt-matter {
+    background-color: #bfffdf;
 }
 
 .item-sprite {
