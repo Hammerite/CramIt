@@ -486,10 +486,10 @@ namespace Tests
 
             var namesOfInputItemsThatCannotCompleteOneOfTheRecipes_2InputItemsAlreadyChosen_NotIncludingARockTypeItem = new []
             {
-                "Life Orb",   "Choice Band",  "Power Belt",   "Air Balloon",      "Soft Sand",    "Choice Specs", "Assault Vest", "Silk Scarf",
-                "Light Ball", "Power Anklet", "Power Bracer", "Utility Umbrella", "Choice Scarf", "Light Clay",   "Wide Lens",    "Smoke Ball",
-                "Magnet",     "Power Band",   "Power Weight", "Leftovers",        "Lucky Egg",    "Power Lens",   "Zoom Lens",    "Metronome",
-                "Sachet",
+                "Air Balloon",  "Choice Specs", "Light Clay", "Metronome",    "Power Belt",   "Power Weight", "Smoke Ball",       "Wide Lens",
+                "Assault Vest", "Leftovers",    "Lucky Egg",  "Power Anklet", "Power Bracer", "Sachet",       "Soft Sand",        "Wishing Piece",
+                "Choice Band",  "Life Orb",     "Magnet",     "Power Band",   "Power Lens",   "Silk Scarf",   "Utility Umbrella", "Zoom Lens",
+                "Choice Scarf", "Light Ball",
             };
             var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType = new []
             {
@@ -591,7 +591,8 @@ namespace Tests
                     filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
                         .ItemIsViableForAnyRecipe(item);
 
-                Assert.IsTrue(
+                Assert.AreNotEqual(
+                    item.Name == "Wishing Piece",
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem,
                     $"[{item.Name}, 2 already-chosen input items including a Rock-type item]"
                 );
@@ -642,11 +643,11 @@ namespace Tests
 
             var namesOfInputItemsThatCannotCompleteOneOfTheRecipes_2InputItemsAlreadyChosen_NotIncludingARockTypeItem = new []
             {
-                "Scope Lens",      "Heat Rock",      "Rare Bone",        "Petaya Berry", "Black Glasses", "Black Belt",   "Mental Herb",    "Toxic Orb",
-                "Focus Band",      "Adrenaline Orb", "Terrain Extender", "Big Pearl",    "Ring Target",   "Muscle Band",  "Miracle Seed",   "Metal Powder",
-                "Focus Sash",      "Liechi Berry",   "Ganlon Berry",     "Damp Rock",    "Cell Battery",  "Flame Orb",    "White Herb",     "Soothe Bell",
-                "Protective Pads", "Apicot Berry",   "Icy Rock",         "Throat Spray", "Bright Powder", "Big Mushroom", "Never-Melt Ice", "Shell Bell",
-                "Salac Berry",
+                "Adrenaline Orb", "Black Glasses", "Focus Band",   "Icy Rock",     "Miracle Seed",   "Protective Pads", "Scope Lens",       "Throat Spray",
+                "Apicot Berry",   "Bright Powder", "Focus Sash",   "Liechi Berry", "Muscle Band",    "Rare Bone",       "Shell Bell",       "Toxic Orb",
+                "Big Mushroom",   "Cell Battery",  "Ganlon Berry", "Mental Herb",  "Never-Melt Ice", "Ring Target",     "Soothe Bell",      "White Herb",
+                "Big Pearl",      "Damp Rock",     "Heat Rock",    "Metal Powder", "Petaya Berry",   "Salac Berry",     "Terrain Extender", "Wishing Piece",
+                "Black Belt",     "Flame Orb",
             };
             var namesOfInputItemsThatCanCompleteOneOfTheRecipes_3InputItemsAlreadyChosen_IncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                 new [] {"Black Apricorn", "Blue Apricorn", "Green Apricorn", "Pink Apricorn", "Red Apricorn", "White Apricorn", "Yellow Apricorn"};
@@ -720,7 +721,8 @@ namespace Tests
                     filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly
                         .ItemIsViableForAnyRecipe(item);
 
-                Assert.IsTrue(
+                Assert.AreNotEqual(
+                    item.Name == "Wishing Piece",
                     canCompleteRecipe_Actual_2InputItemsAlreadyChosen_IncludingARockTypeItem,
                     $"[{item.Name}, 2 already-chosen input items including a Rock-type item]"
                 );
