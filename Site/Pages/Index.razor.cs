@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
 using CramIt.Core;
@@ -37,6 +38,9 @@ namespace CramIt.Site.Pages
             => InputItemSlots.Any(slot => slot is null);
         private int FirstFreeInputItemSlotIndex
             => AnyFreeInputItemSlots ? Enumerable.Range(0, NumberOfItemsPerBatch).First(i => InputItemSlots[i] is null) : -1;
+
+        protected int AlreadyChosenInputItemsTotalValue
+            => AlreadyChosenInputItems.Sum(slot => slot.Value);
 
         protected StandardRecipeGroupItemFilterer StandardRecipeGroupItemFilterer { get; set; }
 
@@ -142,6 +146,38 @@ namespace CramIt.Site.Pages
 
             EnforceOrderOfChosenItems();
             SetModeAccordingToFreeItemSlots();
+        }
+
+        protected string InputItemValueContributionDivStyle_Inner(Item inputItem)
+        {
+            Debug.Assert(TargetRecipes.Count == 1);
+            Debug.Assert(AlreadyChosenInputItemsTotalValue <= TargetRecipes[0].MaximumTotalValue);
+
+            if (AlreadyChosenInputItemsTotalValue == TargetRecipes[0].MaximumTotalValue)
+            {
+                return "height: 0%;";
+            }
+
+            double differenceBetweenCurrentTotalAndMaximum = TargetRecipes[0].MaximumTotalValue - AlreadyChosenInputItemsTotalValue;
+
+            double proportionateHeight = inputItem.Value / differenceBetweenCurrentTotalAndMaximum;
+            string heightAsString = (100 * proportionateHeight).ToString("F1", CultureInfo.InvariantCulture);
+
+            return $"height: {heightAsString}%;";
+        }
+
+        protected string InputItemValueContributionDivStyle_MinimumMarker()
+        {
+            Debug.Assert(TargetRecipes.Count == 1);
+            Debug.Assert(AlreadyChosenInputItemsTotalValue < TargetRecipes[0].MinimumTotalValue);
+
+            double differenceBetweenCurrentTotalAndMaximum = TargetRecipes[0].MaximumTotalValue - AlreadyChosenInputItemsTotalValue;
+            double differenceBetweenMinimumAndMaximum      = TargetRecipes[0].MaximumTotalValue - TargetRecipes[0].MinimumTotalValue;
+
+            double proportionateHeight = 1.0 - (differenceBetweenMinimumAndMaximum / differenceBetweenCurrentTotalAndMaximum);
+            string heightAsString = (100 * proportionateHeight).ToString("F1", CultureInfo.InvariantCulture);
+
+            return $"height: {heightAsString}%;";
         }
 
         protected void OnClear()

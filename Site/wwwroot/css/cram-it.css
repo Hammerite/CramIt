@@ -202,3 +202,31 @@ h1 {
     height: 24px;
     background-image: url('https://orderofthehammer.com/cram-it-item-sprites.png');
 }
+
+.value-contribution-div-outer {
+    position: absolute;
+    right: 0px;
+    width: 5px;
+    height: 100%;
+    border-left: 1px solid black;
+}
+
+.value-contribution-div-inner {
+    background-color: salmon;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+.value-contribution-div-inner-too-much {
+    background-color: red;
+    height: 100%;
+    width: 100%;
+}
+
+.value-contribution-div-minimum-marker {
+    border-top: 1px solid black;
+    position: absolute;
+    bottom: 0px;
+    width: 100%
+}

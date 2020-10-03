@@ -51,7 +51,7 @@
                             }
                             else
                             {
-                                var outerDivClassList = new List<string> { "chosen-item-slot-outer" };
+                                var outerDivClassList = new List<string> {"chosen-item-slot-outer"};
                                 outerDivClassList.Add(
                                     StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAllRecipes(InputItemSlots[i]) ?
                                         "chosen-item-slot-outer-already-chosen-of-placatory-type-for-all-recipes" :
@@ -182,6 +182,12 @@ else
                 break;
             case Mode.SelectingInputs:
                 <div class="item-choice-list">
+                    @{
+                        var inputItemValueContributionDivStyle_MinimumMarker =
+                            AlreadyChosenInputItemsTotalValue < TargetRecipes[0].MinimumTotalValue ?
+                            InputItemValueContributionDivStyle_MinimumMarker() :
+                            "";
+                    }
                     @foreach (var t in Items.InputItems(
                         InputItemOptions, StandardRecipeGroupItemFilterer).OrderByDescending(t => (int)(t.BestViabilityCategory)))
                     {
@@ -202,6 +208,23 @@ else
                                 <br />
                                 @t.Item.ToString(InputItemOptions.CombineGroupsOfSimilarItems)
                             </div>
+                            @if (TargetRecipes.Count == 1 && AlreadyChosenInputItemsTotalValue <= TargetRecipes[0].MaximumTotalValue)
+                            {
+                                <div class="value-contribution-div-outer">
+                                    @if (AlreadyChosenInputItemsTotalValue + t.Item.Value > TargetRecipes[0].MaximumTotalValue)
+                                    {
+                                        <div class="value-contribution-div-inner-too-much"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="value-contribution-div-inner" style="@InputItemValueContributionDivStyle_Inner(t.Item)"></div>
+                                        @if (AlreadyChosenInputItemsTotalValue < TargetRecipes[0].MinimumTotalValue)
+                                        {
+                                            <div class="value-contribution-div-minimum-marker" style="@inputItemValueContributionDivStyle_MinimumMarker"></div>
+                                        }
+                                    }
+                                </div>
+                            }
                         </div>
                     }
                 </div>
