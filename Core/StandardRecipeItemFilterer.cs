@@ -42,16 +42,21 @@ namespace CramIt.Core
                 throw new ArgumentException($"Must contain fewer than {NumberOfItemsPerBatch} elements", nameof(alreadyChosenInputs));
             }
 
+            _recipeTargetItem = targetRecipe.Item;
+
             _inputItemOptions = inputItemOptions;
 
-            _minimumItemValue = Items.InputItems(_inputItemOptions).Min(item => item.Value);
-            _maximumItemValue = Items.InputItems(_inputItemOptions).Max(item => item.Value);
+            var usableInputItems = Items.InputItems(_inputItemOptions).Except(new [] {_recipeTargetItem});
 
-            _minimumItemValuePerType = Items.InputItems(_inputItemOptions).GroupBy(item => item.Type).ToDictionary(g => g.Key, g => g.Min(item => item.Value));
-            _maximumItemValuePerType = Items.InputItems(_inputItemOptions).GroupBy(item => item.Type).ToDictionary(g => g.Key, g => g.Max(item => item.Value));
+            _minimumItemValue = usableInputItems.Min(item => item.Value);
+            _maximumItemValue = usableInputItems.Max(item => item.Value);
+
+            _minimumItemValuePerType = usableInputItems.GroupBy(item => item.Type).ToDictionary(g => g.Key, g => g.Min(item => item.Value));
+            _maximumItemValuePerType = usableInputItems.GroupBy(item => item.Type).ToDictionary(g => g.Key, g => g.Max(item => item.Value));
 
             Debug.Assert(Enum.GetValues(typeof(Type)).Cast<Type>().All(_minimumItemValuePerType.ContainsKey));
             Debug.Assert(Enum.GetValues(typeof(Type)).Cast<Type>().All(_maximumItemValuePerType.ContainsKey));
+
 
             _placatoryTypes = targetRecipe.Types;
             TypedInputRequired = ! alreadyChosenInputs_List.Any(input => _placatoryTypes.Contains(input.Type));
@@ -75,6 +80,8 @@ namespace CramIt.Core
                 _disallowed4thItem = alreadyChosenInputs_List[0];
             }
         }
+
+        private readonly Item _recipeTargetItem;
 
         private InputItemOptions _inputItemOptions;
 
@@ -134,6 +141,11 @@ namespace CramIt.Core
             isOfPlacatoryType = ItemIsOfPlacatoryType(item);
             bool typedInputRequired = TypedInputRequired && ! isOfPlacatoryType;
 
+            if (item == _recipeTargetItem)
+            {
+                return false;
+            }
+
             if (_numberOfAdditionalInputsRequired == 1 && (typedInputRequired || item == _disallowed4thItem))
             {
                 return false;
@@ -147,7 +159,8 @@ namespace CramIt.Core
             if (numberOfAdditionalInputsRequired == 1 && typedInputRequired)
             {
                 return Items.InputItems(_inputItemOptions)
-                            .Any(x => _placatoryTypes.Contains(x.Type)
+                            .Any(x => x != _recipeTargetItem
+                                   && _placatoryTypes.Contains(x.Type)
                                    && x.Value >= minimumRequiredValueContributionFromAdditionalInputs
                                    && x.Value <= maximumPermissibleValueContributionFromAdditionalInputs);
             }

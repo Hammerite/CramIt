@@ -183,8 +183,13 @@ else
             case Mode.SelectingInputs:
                 <div class="item-choice-list">
                     @foreach (var t in Items.InputItems(
-                       InputItemOptions, StandardRecipeGroupItemFilterer).OrderByDescending(t => (int)(t.BestViabilityCategory)))
+                        InputItemOptions, StandardRecipeGroupItemFilterer).OrderByDescending(t => (int)(t.BestViabilityCategory)))
                     {
+                        if (t.Item == TargetItem)
+                        {
+                            continue;
+                        }
+
                         string viabilityClassName = t.BestViabilityCategory.CssClassName("input-item-choice");
                         if (t.BestViabilityCategory == InputItemViabilityCategory.Viable_OfPlacatoryType)
                         {
