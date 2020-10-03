@@ -13,8 +13,11 @@ namespace CramIt.Core
         public Type   Type              { get; }
         public int    Value             { get; }
 
+        public bool IsTR
+            => ! (TRMoveName is null);
+
         public override string ToString()
-            => Name + (TRMoveName is null ? "" : $" {TRMoveName}");
+            => Name + (IsTR ? $" {TRMoveName}" : "");
 
         public string NameForHtmlId
             => Name.ToLowerInvariant().Replace(' ', '-').Replace('\u00e9', 'e');

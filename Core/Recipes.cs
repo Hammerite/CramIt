@@ -10,9 +10,12 @@ namespace CramIt.Core
 {
     public static class Recipes
     {
-        public static IReadOnlyDictionary<string, IReadOnlyList<SR>> StandardRecipes     { get; }
-        public static IReadOnlyDictionary<string, BR>                BallRecipes         { get; }
-        public static IReadOnlyDictionary<string, Item>              RepeatedItemRecipes { get; }
+        public static IReadOnlyDictionary<string, IReadOnlyList<SR>> StandardRecipes             { get; }
+        public static IReadOnlyDictionary<string, SR>                TRRecipes                   { get; }
+        public static IReadOnlyDictionary<string, IReadOnlyList<SR>> StandardRecipesExcludingTRs { get; }
+
+        public static IReadOnlyDictionary<string, BR>   BallRecipes         { get; }
+        public static IReadOnlyDictionary<string, Item> RepeatedItemRecipes { get; }
 
         static Recipes()
         {
@@ -227,11 +230,18 @@ namespace CramIt.Core
             static SR[] SimpleSweetRecipes(string sweetTypeName, int minimumTotalValue, params string[] otherPossibleSweetTypeNames)
                 => new [] {new SR($"{sweetTypeName} Sweet", minimumTotalValue, new [] {Fairy}, otherPossibleSweetTypeNames.Select(name => $"{name} Sweet"))};
 
-            StandardRecipes = standardRecipes_Simple
+            TRRecipes = standardRecipes_Simple.Where(recipe => recipe.Value.Item.IsTR).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            StandardRecipesExcludingTRs = standardRecipes_Simple
+                .Where (recipe => ! recipe.Value.Item.IsTR)
                 .Concat(standardRecipes_MultipleTypesSingleValue)
                 .Select(kvp => new KeyValuePair<string, IReadOnlyList<SR>>(kvp.Key, new [] {kvp.Value}))
                 .Concat(standardRecipes_SingleTypeMultipleValues)
                 .Concat(standardRecipes_EverythingElse)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            StandardRecipes = StandardRecipesExcludingTRs
+                .Concat(TRRecipes.Select(kvp => new KeyValuePair<string, IReadOnlyList<SR>>(kvp.Key, new [] {kvp.Value})))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             var apricornColours_All                     = new [] {"Black", "Blue", "Green", "Pink", "Red", "White", "Yellow"};

@@ -13,6 +13,8 @@ namespace CramIt.Site.Pages
 
         protected Mode Mode { get; set; }
 
+        protected TargetItemCategory TargetItemCategory { get; set; } = TargetItemCategory.NotTR;
+
         protected Item TargetItem { get; set; }
 
         protected IReadOnlyList<StandardRecipe> TargetRecipes { get; set; }
@@ -42,6 +44,9 @@ namespace CramIt.Site.Pages
             Mode = Mode.SelectingDesiredOutput;
             ClearChosenItems();
         }
+
+        protected void RecipeClicked(StandardRecipe recipe)
+            => RecipeClicked(new [] {recipe});
 
         protected void RecipeClicked(IReadOnlyList<StandardRecipe> recipeList)
         {

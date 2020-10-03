@@ -7,6 +7,21 @@
     @switch (Mode)
     {
         case Mode.SelectingDesiredOutput:
+            <div class="target-item-category-choice">
+                @switch (TargetItemCategory)
+                {
+                    case TargetItemCategory.TR:
+                        <div class="category category-selected">TRs</div><!--
+                        --><div class="category category-unselected" @onclick="() => {TargetItemCategory = TargetItemCategory.NotTR;}">Others</div>
+                        break;
+                    case TargetItemCategory.NotTR:
+                        <div class="category category-unselected" @onclick="() => {TargetItemCategory = TargetItemCategory.TR;}">TRs</div><!--
+                        --><div class="category category-selected">Others</div>
+                        break;
+                    default:
+                        throw new Exception($@"Unhandled {nameof(Core.TargetItemCategory)} ""{TargetItemCategory}"" in switch");
+                }
+            </div>
             break;
         case Mode.SelectingInputs:
         case Mode.SelectionComplete:
@@ -69,15 +84,34 @@
     {
         case Mode.SelectingDesiredOutput:
             <div class="item-choice-list">
-                @foreach (var recipe in Recipes.StandardRecipes)
+                @switch (TargetItemCategory)
                 {
-                    <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
-                        <div class="item-choice-inner">
-                            <div class="item-sprite" style="@recipe.Value.First().Item.HtmlSpriteStyle"></div>
-                            <br />
-                            @recipe.Value.First().Item.ToString()
-                        </div>
-                    </div>
+                    case TargetItemCategory.NotTR:
+                        @foreach (var recipe in Recipes.StandardRecipesExcludingTRs)
+                        {
+                            <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
+                                <div class="item-choice-inner">
+                                    <div class="item-sprite" style="@recipe.Value.First().Item.HtmlSpriteStyle"></div>
+                                    <br />
+                                    @recipe.Value.First().Item.ToString()
+                                </div>
+                            </div>
+                        }
+                        break;
+                    case TargetItemCategory.TR:
+                        @foreach (var recipe in Recipes.TRRecipes)
+                        {
+                            <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
+                                <div class="item-choice-inner">
+                                    <div class="item-sprite" style="@recipe.Value.Item.HtmlSpriteStyle"></div>
+                                    <br />
+                                    @recipe.Value.Item.ToString()
+                                </div>
+                            </div>
+                        }
+                        break;
+                    default:
+                        throw new Exception($@"Unhandled {nameof(Core.TargetItemCategory)} ""{TargetItemCategory}"" in switch");
                 }
             </div>
             break;
