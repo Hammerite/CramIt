@@ -6,17 +6,18 @@ namespace CramIt.Core
 {
     public class StandardRecipeGroupItemFilterer
     {
-        public StandardRecipeGroupItemFilterer(IEnumerable<StandardRecipe> targetRecipes): this(targetRecipes, new Item[0])
+        public StandardRecipeGroupItemFilterer(IEnumerable<StandardRecipe> targetRecipes, InputItemOptions inputItemOptions):
+            this(targetRecipes, inputItemOptions, new Item[0])
         {}
 
-        public StandardRecipeGroupItemFilterer(IEnumerable<StandardRecipe> targetRecipes, IEnumerable<Item> alreadyChosenInputs)
+        public StandardRecipeGroupItemFilterer(IEnumerable<StandardRecipe> targetRecipes, InputItemOptions inputItemOptions, IEnumerable<Item> alreadyChosenInputs)
         {
             if (targetRecipes is null)
             {
                 throw new ArgumentNullException(nameof(targetRecipes));
             }
 
-            _itemFilterers = targetRecipes.Select(r => new StandardRecipeItemFilterer(r, alreadyChosenInputs)).ToList();
+            _itemFilterers = targetRecipes.Select(r => new StandardRecipeItemFilterer(r, inputItemOptions, alreadyChosenInputs)).ToList();
         }
 
         private IReadOnlyList<StandardRecipeItemFilterer> _itemFilterers;

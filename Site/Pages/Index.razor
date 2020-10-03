@@ -4,140 +4,157 @@
 <div id="sticky">
     <h1>CRAM IT!</h1>
 
-    @switch (Mode)
+    @if ( ! SettingOptions)
     {
-        case Mode.SelectingDesiredOutput:
-            <div class="target-item-category-choice">
-                @switch (TargetItemCategory)
-                {
-                    case TargetItemCategory.TR:
-                        <div class="category category-selected">TRs</div><!--
-                        --><div class="category category-unselected" @onclick="() => {TargetItemCategory = TargetItemCategory.NotTR;}">Others</div>
-                        break;
-                    case TargetItemCategory.NotTR:
-                        <div class="category category-unselected" @onclick="() => {TargetItemCategory = TargetItemCategory.TR;}">TRs</div><!--
-                        --><div class="category category-selected">Others</div>
-                        break;
-                    default:
-                        throw new Exception($@"Unhandled {nameof(Core.TargetItemCategory)} ""{TargetItemCategory}"" in switch");
-                }
-            </div>
-            break;
-        case Mode.SelectingInputs:
-        case Mode.SelectionComplete:
-            <div class="summary-panel">
-                <div class="item-choice-outer recipe-choice target-item">
-                    <div class="item-choice-inner">
-                        <div class="item-sprite" style="@TargetItem.HtmlSpriteStyle"></div>
-                        <br />
-                        @TargetItem.ToString()
-                    </div>
-                </div>
-                <div class="already-chosen-items">
-                    @for (int i = 0; i < NumberOfItemsPerBatch; ++i)
-                    {
-                        if (InputItemSlots[i] is null)
-                        {
-                            string outerDivClassList =
-                                "chosen-item-slot-outer chosen-item-slot-outer-not-yet-chosen" + (i == 0 ? " chosen-item-slot-outer-first" : "");
-                            <div class="@outerDivClassList">
-                                <div class="item-sprite chosen-item-slot-icon" style="@Item.PlaceholderHtmlSpriteStyle"></div>
-                                <div class="chosen-item-slot-name chosen-item-slot-name-not-yet-chosen">Not chosen yet</div>
-                            </div>
-                        }
-                        else
-                        {
-                            var outerDivClassList = new List<string> {"chosen-item-slot-outer"};
-                            outerDivClassList.Add(
-                                StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAllRecipes(InputItemSlots[i]) ?
-                                    "chosen-item-slot-outer-already-chosen-of-placatory-type-for-all-recipes" :
-                                StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAnyRecipe(InputItemSlots[i]) ?
-                                    "chosen-item-slot-outer-already-chosen-of-placatory-type-for-some-but-not-all-recipes" :
-                                "chosen-item-slot-outer-already-chosen-not-of-placatory-type-for-any-recipe"
-                            );
-                            if (i == 0)
-                            {
-                                outerDivClassList.Add("chosen-item-slot-outer-first");
-                            }
+        <button class="options-button" @onclick="ToggleSettingOptions">Options</button>
 
-                            <div class="@string.Join(" ", outerDivClassList)">
-                                <div class="item-sprite chosen-item-slot-icon" style="@InputItemSlots[i].HtmlSpriteStyle"></div>
-                                <div class="chosen-item-slot-name chosen-item-slot-name-already-chosen">@InputItemSlots[i].ToString()</div>
-                                @{
-                                    int i_Uncaptured = i;
-                                }
-                                <button @onclick="() => InputItemUnchosen(i_Uncaptured)" class="unchoose-item-button">&times;</button>
-                            </div>
-                        }
+        @switch (Mode)
+        {
+            case Mode.SelectingDesiredOutput:
+                <div class="target-item-category-choice">
+                    @switch (TargetItemCategory)
+                    {
+                        case TargetItemCategory.TR:
+                            <div class="category category-selected">TRs</div><!--
+                            --><div class="category category-unselected" @onclick="() => {TargetItemCategory = TargetItemCategory.NotTR;}">Others</div>
+                            break;
+                        case TargetItemCategory.NotTR:
+                            <div class="category category-unselected" @onclick="() => {TargetItemCategory = TargetItemCategory.TR;}">TRs</div><!--
+                            --><div class="category category-selected">Others</div>
+                            break;
+                        default:
+                            throw new Exception($@"Unhandled {nameof(Core.TargetItemCategory)} ""{TargetItemCategory}"" in switch");
                     }
                 </div>
-                <button @onclick="Restart" class="restart-button">Restart</button>
-            </div>
-            break;
-        default:
-            throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
-    }
-</div>
-
-<div>
-    @switch (Mode)
-    {
-        case Mode.SelectingDesiredOutput:
-            <div class="item-choice-list">
-                @switch (TargetItemCategory)
-                {
-                    case TargetItemCategory.NotTR:
-                        @foreach (var recipe in Recipes.StandardRecipesExcludingTRs)
-                        {
-                            <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
-                                <div class="item-choice-inner">
-                                    <div class="item-sprite" style="@recipe.Value.First().Item.HtmlSpriteStyle"></div>
-                                    <br />
-                                    @recipe.Value.First().Item.ToString()
-                                </div>
-                            </div>
-                        }
-                        break;
-                    case TargetItemCategory.TR:
-                        @foreach (var recipe in Recipes.TRRecipes)
-                        {
-                            <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
-                                <div class="item-choice-inner">
-                                    <div class="item-sprite" style="@recipe.Value.Item.HtmlSpriteStyle"></div>
-                                    <br />
-                                    @recipe.Value.Item.ToString()
-                                </div>
-                            </div>
-                        }
-                        break;
-                    default:
-                        throw new Exception($@"Unhandled {nameof(Core.TargetItemCategory)} ""{TargetItemCategory}"" in switch");
-                }
-            </div>
-            break;
-        case Mode.SelectingInputs:
-            <div class="item-choice-list">
-                @foreach (var t in Items.InputItems(StandardRecipeGroupItemFilterer).OrderByDescending(t => (int)(t.BestViabilityCategory)))
-                {
-                    string viabilityClassName = t.BestViabilityCategory.CssClassName("input-item-choice");
-                    if (t.BestViabilityCategory == InputItemViabilityCategory.Viable_OfPlacatoryType)
-                    {
-                        viabilityClassName += StandardRecipeGroupItemFilterer.TypedInputRequiredForAnyRecipe ? "-type-matters" : "-type-doesnt-matter";
-                    }
-
-                    <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemChosen(t.Item)">
+                break;
+            case Mode.SelectingInputs:
+            case Mode.SelectionComplete:
+                <div class="summary-panel">
+                    <div class="item-choice-outer recipe-choice target-item">
                         <div class="item-choice-inner">
-                            <div class="item-sprite" style="@t.Item.HtmlSpriteStyle"></div>
+                            <div class="item-sprite" style="@TargetItem.HtmlSpriteStyle"></div>
                             <br />
-                            @t.Item.ToString()
+                            @TargetItem.ToString()
                         </div>
                     </div>
-                }
-            </div>
-            break;
-        case Mode.SelectionComplete:
-            break;
-        default:
-            throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
+                    <div class="already-chosen-items">
+                        @for (int i = 0; i < NumberOfItemsPerBatch; ++i)
+                        {
+                            if (InputItemSlots[i] is null)
+                            {
+                                string outerDivClassList =
+                                    "chosen-item-slot-outer chosen-item-slot-outer-not-yet-chosen" + (i == 0 ? " chosen-item-slot-outer-first" : "");
+                                <div class="@outerDivClassList">
+                                    <div class="item-sprite chosen-item-slot-icon" style="@Item.PlaceholderHtmlSpriteStyle"></div>
+                                    <div class="chosen-item-slot-name chosen-item-slot-name-not-yet-chosen">Not chosen yet</div>
+                                </div>
+                            }
+                            else
+                            {
+                                var outerDivClassList = new List<string> { "chosen-item-slot-outer" };
+                                outerDivClassList.Add(
+                                    StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAllRecipes(InputItemSlots[i]) ?
+                                        "chosen-item-slot-outer-already-chosen-of-placatory-type-for-all-recipes" :
+                                    StandardRecipeGroupItemFilterer.ItemIsOfPlacatoryTypeForAnyRecipe(InputItemSlots[i]) ?
+                                        "chosen-item-slot-outer-already-chosen-of-placatory-type-for-some-but-not-all-recipes" :
+                                    "chosen-item-slot-outer-already-chosen-not-of-placatory-type-for-any-recipe"
+                                );
+                                if (i == 0)
+                                {
+                                    outerDivClassList.Add("chosen-item-slot-outer-first");
+                                }
+
+                                <div class="@string.Join(" ", outerDivClassList)">
+                                    <div class="item-sprite chosen-item-slot-icon" style="@InputItemSlots[i].HtmlSpriteStyle"></div>
+                                    <div class="chosen-item-slot-name chosen-item-slot-name-already-chosen">@InputItemSlots[i].ToString(InputItemOptions.CombineGroupsOfSimilarItems)</div>
+                                    @{
+                                        int i_Uncaptured = i;
+                                    }
+                                    <button @onclick="() => InputItemUnchosen(i_Uncaptured)" class="unchoose-item-button">&times;</button>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <button @onclick="Restart" class="restart-button">Restart</button>
+                </div>
+                break;
+            default:
+                throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
+        }
     }
 </div>
+
+@if (SettingOptions)
+{
+    <input type="checkbox" @bind="Option_IncludeIrreplaceableInputItems" />
+    @:Include irreplaceable input items<br />
+    <input type="checkbox" @bind="Option_CombineGroupsOfSimilarInputItems" />
+    @:Combine groups of similar input items<br />
+    <button @onclick="ToggleSettingOptions">Done</button>
+}
+else
+{
+    <div>
+        @switch (Mode)
+        {
+            case Mode.SelectingDesiredOutput:
+                <div class="item-choice-list">
+                    @switch (TargetItemCategory)
+                    {
+                        case TargetItemCategory.NotTR:
+                            @foreach (var recipe in Recipes.StandardRecipesExcludingTRs)
+                            {
+                                <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
+                                    <div class="item-choice-inner">
+                                        <div class="item-sprite" style="@recipe.Value.First().Item.HtmlSpriteStyle"></div>
+                                        <br />
+                                        @recipe.Value.First().Item.ToString()
+                                    </div>
+                                </div>
+                            }
+                            break;
+                        case TargetItemCategory.TR:
+                            @foreach (var recipe in Recipes.TRRecipes)
+                            {
+                                <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
+                                    <div class="item-choice-inner">
+                                        <div class="item-sprite" style="@recipe.Value.Item.HtmlSpriteStyle"></div>
+                                        <br />
+                                        @recipe.Value.Item.ToString()
+                                    </div>
+                                </div>
+                            }
+                            break;
+                        default:
+                            throw new Exception($@"Unhandled {nameof(Core.TargetItemCategory)} ""{TargetItemCategory}"" in switch");
+                    }
+                </div>
+                break;
+            case Mode.SelectingInputs:
+                <div class="item-choice-list">
+                    @foreach (var t in Items.InputItems(
+                       InputItemOptions, StandardRecipeGroupItemFilterer).OrderByDescending(t => (int)(t.BestViabilityCategory)))
+                    {
+                        string viabilityClassName = t.BestViabilityCategory.CssClassName("input-item-choice");
+                        if (t.BestViabilityCategory == InputItemViabilityCategory.Viable_OfPlacatoryType)
+                        {
+                            viabilityClassName += StandardRecipeGroupItemFilterer.TypedInputRequiredForAnyRecipe ? "-type-matters" : "-type-doesnt-matter";
+                        }
+
+                        <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemChosen(t.Item)">
+                            <div class="item-choice-inner">
+                                <div class="item-sprite" style="@t.Item.HtmlSpriteStyle"></div>
+                                <br />
+                                @t.Item.ToString(InputItemOptions.CombineGroupsOfSimilarItems)
+                            </div>
+                        </div>
+                    }
+                </div>
+                break;
+            case Mode.SelectionComplete:
+                break;
+            default:
+                throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
+        }
+    </div>
+}

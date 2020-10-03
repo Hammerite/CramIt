@@ -5,19 +5,26 @@ namespace CramIt.Core
 {
     public class Item: IEquatable<Item>
     {
-        public string Name              { get; }
-        public string TRMoveName        { get; }
-        public int    SpriteRowIndex    { get; }
-        public int    SpriteColumnIndex { get; }
-        public bool   CanBeInput        { get; }
-        public Type   Type              { get; }
-        public int    Value             { get; }
+        public string Name                  { get; }
+        public string TRMoveName            { get; }
+        public int    SpriteRowIndex        { get; }
+        public int    SpriteColumnIndex     { get; }
+        public bool   CanBeInput            { get; }
+        public Type   Type                  { get; }
+        public int    Value                 { get; }
+        public bool   IsIrreplaceable       { get; }
+        public bool   IsGroupRepresentative { get; }
 
         public bool IsTR
             => ! (TRMoveName is null);
 
         public override string ToString()
-            => Name + (IsTR ? $" {TRMoveName}" : "");
+            => ToString(false);
+
+        public string ToString(bool combineGroupsOfSimilarItems)
+            => (combineGroupsOfSimilarItems && Name == "Serious Mint"  ) ? "Mint (any)"         :
+               (combineGroupsOfSimilarItems && Name == "Health Feather") ? "Stat feather (any)" :
+               (Name + (IsTR ? $" {TRMoveName}" : ""));
 
         public string NameForHtmlId
             => Name.ToLowerInvariant().Replace(' ', '-').Replace('\u00e9', 'e');
@@ -37,7 +44,7 @@ namespace CramIt.Core
         public static string PlaceholderHtmlSpriteStyle
             => "background-position: 0px 0px;";
 
-        public static Item Input(string name, int spriteRowIndex, int spriteColumnIndex, Type type, int value)
+        public static Item Input(string name, int spriteRowIndex, int spriteColumnIndex, Type type, int value, bool isIrreplaceable, bool isGroupRepresentative)
         {
             const int maxItemValue = 20;
 
@@ -55,7 +62,7 @@ namespace CramIt.Core
                 throw new ArgumentException("Must be a defined member of the enum", nameof(type));
             }
 
-            return new Item(name, null, spriteRowIndex, spriteColumnIndex, true, type, value);
+            return new Item(name, null, spriteRowIndex, spriteColumnIndex, true, type, value, isIrreplaceable, isGroupRepresentative);
         }
 
         public static Item TR(int number, string trMoveName, int spriteRowIndex, int spriteColumnIndex, Type type)
@@ -74,15 +81,24 @@ namespace CramIt.Core
                 throw new ArgumentException("Must be a defined member of the enum", nameof(type));
             }
 
-            return new Item($"TR{number:D2}", trMoveName, spriteRowIndex, spriteColumnIndex, false, type, InvalidValue);
+            return new Item($"TR{number:D2}", trMoveName, spriteRowIndex, spriteColumnIndex, false, type, InvalidValue, false, true);
         }
 
         public static Item Ball(string name, int spriteRowIndex, int spriteColumnIndex)
-            => new Item(name, null, spriteRowIndex, spriteColumnIndex, false, (Type)(int.MinValue), InvalidValue);
+            => new Item(name, null, spriteRowIndex, spriteColumnIndex, false, (Type)(int.MinValue), InvalidValue, false, true);
 
         const int InvalidValue = -1 * (1 << 10);
 
-        private Item(string name, string trMoveName, int spriteRowIndex, int spriteColumnIndex, bool canBeInput, Type type, int value)
+        private Item(
+            string name,
+            string trMoveName,
+            int    spriteRowIndex,
+            int    spriteColumnIndex,
+            bool   canBeInput,
+            Type   type,
+            int    value,
+            bool   isIrreplaceable,
+            bool   isGroupRepresentative)
         {
             const int numberOfSpritesPerRow = 20;
             const int numberOfRowsOfSprites = 16;
@@ -114,13 +130,15 @@ namespace CramIt.Core
                 throw new ArgumentException($"Must be less than the number of sprites per row, which is {numberOfSpritesPerRow}", nameof(spriteColumnIndex));
             }
 
-            Name              = name;
-            TRMoveName        = trMoveName;
-            SpriteRowIndex    = spriteRowIndex;
-            SpriteColumnIndex = spriteColumnIndex;
-            CanBeInput        = canBeInput;
-            Type              = type;
-            Value             = value;
+            Name                  = name;
+            TRMoveName            = trMoveName;
+            SpriteRowIndex        = spriteRowIndex;
+            SpriteColumnIndex     = spriteColumnIndex;
+            CanBeInput            = canBeInput;
+            Type                  = type;
+            Value                 = value;
+            IsIrreplaceable       = isIrreplaceable;
+            IsGroupRepresentative = isGroupRepresentative;
         }
 
         public override bool Equals(object that)

@@ -9,14 +9,19 @@ namespace CramIt.Core
     {
         public const int NumberOfItemsPerBatch = 4;
 
-        public StandardRecipeItemFilterer(StandardRecipe targetRecipe): this(targetRecipe, new Item[0])
+        public StandardRecipeItemFilterer(StandardRecipe targetRecipe, InputItemOptions inputItemOptions): this(targetRecipe, inputItemOptions, new Item[0])
         {}
 
-        public StandardRecipeItemFilterer(StandardRecipe targetRecipe, IEnumerable<Item> alreadyChosenInputs)
+        public StandardRecipeItemFilterer(StandardRecipe targetRecipe, InputItemOptions inputItemOptions, IEnumerable<Item> alreadyChosenInputs)
         {
             if (targetRecipe is null)
             {
                 throw new ArgumentNullException(nameof(targetRecipe));
+            }
+
+            if (inputItemOptions is null)
+            {
+                throw new ArgumentNullException(nameof(inputItemOptions));
             }
 
             if (alreadyChosenInputs is null)
@@ -36,6 +41,17 @@ namespace CramIt.Core
             {
                 throw new ArgumentException($"Must contain fewer than {NumberOfItemsPerBatch} elements", nameof(alreadyChosenInputs));
             }
+
+            _inputItemOptions = inputItemOptions;
+
+            _minimumItemValue = Items.InputItems(_inputItemOptions).Min(item => item.Value);
+            _maximumItemValue = Items.InputItems(_inputItemOptions).Max(item => item.Value);
+
+            _minimumItemValuePerType = Items.InputItems(_inputItemOptions).GroupBy(item => item.Type).ToDictionary(g => g.Key, g => g.Min(item => item.Value));
+            _maximumItemValuePerType = Items.InputItems(_inputItemOptions).GroupBy(item => item.Type).ToDictionary(g => g.Key, g => g.Max(item => item.Value));
+
+            Debug.Assert(Enum.GetValues(typeof(Type)).Cast<Type>().All(_minimumItemValuePerType.ContainsKey));
+            Debug.Assert(Enum.GetValues(typeof(Type)).Cast<Type>().All(_maximumItemValuePerType.ContainsKey));
 
             _placatoryTypes = targetRecipe.Types;
             TypedInputRequired = ! alreadyChosenInputs_List.Any(input => _placatoryTypes.Contains(input.Type));
@@ -59,6 +75,14 @@ namespace CramIt.Core
                 _disallowed4thItem = alreadyChosenInputs_List[0];
             }
         }
+
+        private InputItemOptions _inputItemOptions;
+
+        private readonly int _minimumItemValue;
+        private readonly int _maximumItemValue;
+
+        private readonly Dictionary<Type, int> _minimumItemValuePerType;
+        private readonly Dictionary<Type, int> _maximumItemValuePerType;
 
         private readonly IReadOnlyList<Type> _placatoryTypes;
 
@@ -122,9 +146,10 @@ namespace CramIt.Core
 
             if (numberOfAdditionalInputsRequired == 1 && typedInputRequired)
             {
-                return Items.InputItems().Any(x => _placatoryTypes.Contains(x.Type)
-                                                && x.Value >= minimumRequiredValueContributionFromAdditionalInputs
-                                                && x.Value <= maximumPermissibleValueContributionFromAdditionalInputs);
+                return Items.InputItems(_inputItemOptions)
+                            .Any(x => _placatoryTypes.Contains(x.Type)
+                                   && x.Value >= minimumRequiredValueContributionFromAdditionalInputs
+                                   && x.Value <= maximumPermissibleValueContributionFromAdditionalInputs);
             }
 
             int minimumValueContributionFromAdditionalItems = 0;
@@ -146,21 +171,6 @@ namespace CramIt.Core
             bool valueContributionSoFarIsTooBig   = maximumPermissibleValueContributionFromAdditionalInputs < minimumValueContributionFromAdditionalItems;
 
             return ! (valueContributionSoFarIsTooSmall || valueContributionSoFarIsTooBig);
-        }
-
-        private static readonly int _minimumItemValue = Items.InputItems().Min(item => item.Value);
-        private static readonly int _maximumItemValue = Items.InputItems().Max(item => item.Value);
-
-        private static readonly Dictionary<Type, int> _minimumItemValuePerType;
-        private static readonly Dictionary<Type, int> _maximumItemValuePerType;
-
-        static StandardRecipeItemFilterer()
-        {
-            _minimumItemValuePerType = Items.InputItems().GroupBy(item => item.Type).ToDictionary(g => g.Key, g => g.Min(item => item.Value));
-            _maximumItemValuePerType = Items.InputItems().GroupBy(item => item.Type).ToDictionary(g => g.Key, g => g.Max(item => item.Value));
-
-            Debug.Assert(Enum.GetValues(typeof(Type)).Cast<Type>().All(_minimumItemValuePerType.ContainsKey));
-            Debug.Assert(Enum.GetValues(typeof(Type)).Cast<Type>().All(_maximumItemValuePerType.ContainsKey));
         }
     }
 }

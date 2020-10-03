@@ -9,6 +9,17 @@
     padding-top: 0px;
 }
 
+button {
+    border: 1px solid black;
+}
+
+.options-button {
+    float: right;
+    position: absolute;
+    top: 13px;
+    right: -11px;
+}
+
 .item-choice-outer {
     float: left;
     position: relative; /* This is needed for the centering of the "inner" div. */
@@ -128,10 +139,6 @@ h1 {
 
 .chosen-item-slot-name-already-chosen {
     font-weight: bold;
-}
-
-button {
-    border: 1px solid black;
 }
 
 .unchoose-item-button {

@@ -11,7 +11,11 @@ namespace CramIt.Site.Pages
     {
         public const int NumberOfItemsPerBatch = 4;
 
+        protected bool SettingOptions { get; set; }
         protected Mode Mode { get; set; }
+
+        protected InputItemOptions InputItemOptions         { get; set; } = new InputItemOptions();
+        protected InputItemOptions PreviousInputItemOptions { get; set; }
 
         protected TargetItemCategory TargetItemCategory { get; set; } = TargetItemCategory.NotTR;
 
@@ -45,6 +49,38 @@ namespace CramIt.Site.Pages
             ClearChosenItems();
         }
 
+        protected void ToggleSettingOptions()
+        {
+            SettingOptions = ! SettingOptions;
+
+            if (SettingOptions)
+            {
+                PreviousInputItemOptions = InputItemOptions.Clone();
+            }
+            else if (InputItemOptions != PreviousInputItemOptions)
+            {
+                Restart();
+            }
+        }
+
+        protected bool Option_IncludeIrreplaceableInputItems
+        {
+            get => InputItemOptions.IncludeIrreplaceableItems;
+            set
+            {
+                InputItemOptions.IncludeIrreplaceableItems = value;
+            }
+        }
+
+        protected bool Option_CombineGroupsOfSimilarInputItems
+        {
+            get => InputItemOptions.CombineGroupsOfSimilarItems;
+            set
+            {
+                InputItemOptions.CombineGroupsOfSimilarItems = value;
+            }
+        }
+
         protected void RecipeClicked(StandardRecipe recipe)
             => RecipeClicked(new [] {recipe});
 
@@ -66,7 +102,7 @@ namespace CramIt.Site.Pages
             TargetRecipes = recipeList;
 
             ClearChosenItems();
-            StandardRecipeGroupItemFilterer = new StandardRecipeGroupItemFilterer(TargetRecipes);
+            StandardRecipeGroupItemFilterer = new StandardRecipeGroupItemFilterer(TargetRecipes, InputItemOptions);
         }
 
         protected void InputItemChosen(Item inputItem)
@@ -124,7 +160,7 @@ namespace CramIt.Site.Pages
         {
             if (AnyFreeInputItemSlots)
             {
-                StandardRecipeGroupItemFilterer = new StandardRecipeGroupItemFilterer(TargetRecipes, AlreadyChosenInputItems);
+                StandardRecipeGroupItemFilterer = new StandardRecipeGroupItemFilterer(TargetRecipes, InputItemOptions, AlreadyChosenInputItems);
                 Mode = Mode.SelectingInputs;
             }
             else

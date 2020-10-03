@@ -9,6 +9,8 @@ namespace Tests
     [TestClass]
     public class StandardRecipeGroupItemFiltererTests
     {
+        private static readonly InputItemOptions _inputItemOptions = new InputItemOptions {IncludeIrreplaceableItems = true};
+
         private static IEnumerable<Item> ItemNamesToItems(params string[] itemNames)
             => itemNames.Select(itemName => Items.ItemsByName[itemName]);
 
@@ -26,7 +28,7 @@ namespace Tests
             foreach ((string recipeItemName, IReadOnlyList<StandardRecipe> recipesList) in Recipes.StandardRecipes)
             {
                 bool canCompleteRecipe_Expected = ! namesOfMinValue61OrAboveRecipeItems.Contains(recipeItemName);
-                var filtererGroup = new StandardRecipeGroupItemFilterer(recipesList);
+                var filtererGroup = new StandardRecipeGroupItemFilterer(recipesList, _inputItemOptions);
 
                 foreach (string colourName in apricornColourNames)
                 {
@@ -57,7 +59,7 @@ namespace Tests
 
             foreach (string recipeItemName in namesOfMaxValue10RecipeItems)
             {
-                var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes[recipeItemName]);
+                var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes[recipeItemName], _inputItemOptions);
 
                 foreach (string inputItemName in namesOfValue11OrAboveInputItems)
                 {
@@ -85,7 +87,7 @@ namespace Tests
 
             foreach (string recipeItemName in namesOfValue11To15RecipeItems)
             {
-                var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes[recipeItemName]);
+                var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes[recipeItemName], _inputItemOptions);
 
                 foreach (string inputItemName in namesOfValue16OrAboveInputItems)
                 {
@@ -113,7 +115,7 @@ namespace Tests
 
             foreach (string recipeItemName in namesOfValue16To20RecipeItemsForWhichAnApricornExistsOfAnAppropriateType)
             {
-                var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes[recipeItemName]);
+                var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes[recipeItemName], _inputItemOptions);
 
                 foreach (string inputItemName in namesOfValue20InputItems)
                 {
@@ -149,7 +151,7 @@ namespace Tests
             foreach ((string recipeItemName, IReadOnlyList<string> compatibleValue20InputItems) in
                 namesOfValue16To20RecipeItemsForWhichNoApricornExistsOfAnAppropriateTypeMappedToNamesOfValue20InputItemsWhichCanCompleteThoseRecipes)
             {
-                var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes[recipeItemName]);
+                var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes[recipeItemName], _inputItemOptions);
 
                 foreach (string inputItemName in namesOfValue20InputItems)
                 {
@@ -191,9 +193,9 @@ namespace Tests
             };
 
             var filtererGroup_AlreadyChosenInputItemsIncludeAFightingTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Macho Brace"], alreadyChosenInputItems_IncludingAFightingTypeItem);
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Macho Brace"], _inputItemOptions, alreadyChosenInputItems_IncludingAFightingTypeItem);
             var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFightingTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Macho Brace"], alreadyChosenInputItems_NotIncludingAFightingTypeItem);
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Macho Brace"], _inputItemOptions, alreadyChosenInputItems_NotIncludingAFightingTypeItem);
 
             foreach (var item in Items.InputItems())
             {
@@ -228,7 +230,7 @@ namespace Tests
                 "Apicot Berry",  "Dragon Fang",  "Fossilized Drake", "Lansat Berry", "Rare Bone", "Sharp Beak", "Terrain Extender", "Thick Club",
                 "Bright Powder", "Dragon Scale", "Heavy-Duty Boots", "Nugget",
             };
-            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Big Mushroom"], alreadyChosenInputItems);
+            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Big Mushroom"], _inputItemOptions, alreadyChosenInputItems);
 
             foreach (var item in Items.InputItems())
             {
@@ -251,7 +253,7 @@ namespace Tests
                 "Coba Berry",     "Genius Feather",  "Ice Stone",      "Mago Berry",     "Pretty Feather", "Sharp Beak",     "Stardust",      "Yache Berry",
                 "Custap Berry",   "Grassy Seed",     "Kasib Berry",    "Muscle Feather",
             };
-            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Comet Shard"], alreadyChosenInputItems);
+            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Comet Shard"], _inputItemOptions, alreadyChosenInputItems);
 
             foreach (var item in Items.InputItems())
             {
@@ -265,7 +267,7 @@ namespace Tests
         public void CannotCompleteThePPUpRecipeWithARareCandyWhenThe3AlreadyChosenInputsAreAllRareCandies()
         {
             var alreadyChosenInputItems = ItemNamesToItems("Rare Candy", "Rare Candy", "Rare Candy");
-            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["PP Up"], alreadyChosenInputItems);
+            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["PP Up"], _inputItemOptions, alreadyChosenInputItems);
             Assert.IsFalse(filtererGroup.ItemIsViableForAnyRecipe(Items.ItemsByName["Rare Candy"]));
         }
 
@@ -275,7 +277,7 @@ namespace Tests
             var alreadyChosenInputItems = ItemNamesToItems("Rare Candy", "Razor Claw");
             var apricornColourNames     = new [] {"Black", "Blue", "Green", "Pink", "Red", "White", "Yellow"};
 
-            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Mystic Water"], alreadyChosenInputItems);
+            var filtererGroup = new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Mystic Water"], _inputItemOptions, alreadyChosenInputItems);
 
             foreach (string colourName in apricornColourNames)
             {
@@ -323,9 +325,9 @@ namespace Tests
             };
 
             var filtererGroup_AlreadyChosenInputItemsIncludeAFlyingTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], alreadyChosenInputItems_IncludingAFlyingTypeItem);
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], _inputItemOptions, alreadyChosenInputItems_IncludingAFlyingTypeItem);
             var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFlyingTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], alreadyChosenInputItems_NotIncludingAFlyingTypeItem);
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Air Balloon"], _inputItemOptions, alreadyChosenInputItems_NotIncludingAFlyingTypeItem);
 
             foreach (var item in Items.InputItems())
             {
@@ -385,9 +387,9 @@ namespace Tests
             };
 
             var filtererGroup_AlreadyChosenInputItemsIncludeAnIceTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], alreadyChosenInputItems_IncludingAnIceTypeItem);
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], _inputItemOptions, alreadyChosenInputItems_IncludingAnIceTypeItem);
             var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAnIceTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], alreadyChosenInputItems_NotIncludingAnIceTypeItem);
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Snowball"], _inputItemOptions, alreadyChosenInputItems_NotIncludingAnIceTypeItem);
 
             foreach (var item in Items.InputItems())
             {
@@ -438,9 +440,9 @@ namespace Tests
             var namesOfInputItemsThatCanCompleteOneOfTheRecipes_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem = new [] {"Pink Apricorn", "Bright Powder", "Sachet"};
 
             var filtererGroup_AlreadyChosenInputItemsIncludeAFairyTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Strawberry Sweet"], alreadyChosenInputItems_IncludingAFairyTypeItem);
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Strawberry Sweet"], _inputItemOptions, alreadyChosenInputItems_IncludingAFairyTypeItem);
             var filtererGroup_AlreadyChosenInputItemsDoNotIncludeAFairyTypeItem =
-                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Strawberry Sweet"], alreadyChosenInputItems_NotIncludingAFairyTypeItem);
+                new StandardRecipeGroupItemFilterer(Recipes.StandardRecipes["Strawberry Sweet"], _inputItemOptions, alreadyChosenInputItems_NotIncludingAFairyTypeItem);
 
             foreach (var item in Items.InputItems())
             {
@@ -525,31 +527,37 @@ namespace Tests
             var filtererGroup_2InputItemsAlreadyChosen_IncludingARockTypeItem =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_2Items_IncludingARockTypeItem
                 );
             var filtererGroup_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_2Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
                 );
             var filtererGroup_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_2Items_ConsistingOfPsychicTypeItemsOnly
                 );
             var filtererGroup_3InputItemsAlreadyChosen_IncludingARockTypeItem =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_3Items_IncludingARockTypeItem
                 );
             var filtererGroup_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_3Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
                 );
             var filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly
                 );
 
@@ -648,31 +656,37 @@ namespace Tests
             var filtererGroup_2InputItemsAlreadyChosen_IncludingARockTypeItem =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_2Items_IncludingARockTypeItem
                 );
             var filtererGroup_2InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_2Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
                 );
             var filtererGroup_2InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_2Items_ConsistingOfPsychicTypeItemsOnly
                 );
             var filtererGroup_3InputItemsAlreadyChosen_IncludingARockTypeItem =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_3Items_IncludingARockTypeItem
                 );
             var filtererGroup_3InputItemsAlreadyChosen_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_3Items_NotIncludingARockTypeItemButIncludingAnItemThatIsNeitherNormalTypeNorPsychicType
                 );
             var filtererGroup_3InputItemsAlreadyChosen_ConsistingOfPsychicTypeItemsOnly =
                 new StandardRecipeGroupItemFilterer(
                     Recipes.StandardRecipes["Wishing Piece"],
+                    _inputItemOptions,
                     alreadyChosenInputs_3Items_ConsistingOfPsychicTypeItemsOnly
                 );
 
