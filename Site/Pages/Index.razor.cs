@@ -31,6 +31,8 @@ namespace CramIt.Site.Pages
             => InputItemSlots.Where(slot => ! (slot is null));
         private int NumberOfFreeItemSlots
             => InputItemSlots.Count(slot => slot is null);
+        protected bool AnyInputItemsChosen
+            => ! InputItemSlots.All(slot => slot is null);
         private bool AnyFreeInputItemSlots
             => InputItemSlots.Any(slot => slot is null);
         private int FirstFreeInputItemSlotIndex
@@ -43,7 +45,7 @@ namespace CramIt.Site.Pages
             Restart();
         }
 
-        protected void Restart()
+        private void Restart()
         {
             Mode = Mode.SelectingDesiredOutput;
             ClearChosenItems();
@@ -141,6 +143,16 @@ namespace CramIt.Site.Pages
             EnforceOrderOfChosenItems();
             SetModeAccordingToFreeItemSlots();
         }
+
+        protected void OnClear()
+        {
+            ClearChosenItems();
+            StandardRecipeGroupItemFilterer = new StandardRecipeGroupItemFilterer(TargetRecipes, InputItemOptions);
+            SetModeAccordingToFreeItemSlots();
+        }
+
+        protected void OnRestart()
+            => Restart();
 
         private void ClearChosenItems()
         {

@@ -75,7 +75,17 @@
                             }
                         }
                     </div>
-                    <button @onclick="Restart" class="restart-button">Restart</button>
+                    <div class="button-container-clear-and-restart">
+                        @if (AnyInputItemsChosen)
+                        {
+                            <button @onclick="OnClear" class="clear-button">Clear</button>
+                        }
+                        else
+                        {
+                            <button @onclick="OnClear" class="clear-button" disabled>Clear</button>
+                        }
+                        <button @onclick="OnRestart" class="restart-button">Restart</button>
+                    </div>
                 </div>
                 break;
             default:
