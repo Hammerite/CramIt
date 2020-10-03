@@ -90,6 +90,46 @@
     @:Include irreplaceable input items<br />
     <input type="checkbox" @bind="Option_CombineGroupsOfSimilarInputItems" />
     @:Combine groups of similar input items<br />
+    @:Ordering of TRs:<br />
+
+    <!-- Todo: Find out if there is a way to do radio buttons that isn't shit -->
+    @if (Option_TROrdering == TROrdering.ByMoveName)
+    {
+        <input type="radio" name="TROrdering" value="ByMoveName" checked @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}" />
+    }
+    else
+    {
+        <input type="radio" name="TROrdering" value="ByMoveName" @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}" />
+    }
+    @TROrdering.ByMoveName.HumanReadableName()<br />
+    @if (Option_TROrdering == TROrdering.ByNumber)
+    {
+        <input type="radio" name="TROrdering" value="ByNumber" checked @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}" />
+    }
+    else
+    {
+        <input type="radio" name="TROrdering" value="ByNumber" @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}" />
+    }
+    @TROrdering.ByNumber.HumanReadableName()<br />
+    @if (Option_TROrdering == TROrdering.ByMoveTypeThenMoveName)
+    {
+        <input type="radio" name="TROrdering" value="ByMoveTypeThenMoveName" checked @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}" />
+    }
+    else
+    {
+        <input type="radio" name="TROrdering" value="ByMoveTypeThenMoveName" @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}" />
+    }
+    @TROrdering.ByMoveTypeThenMoveName.HumanReadableName()<br />
+    @if (Option_TROrdering == TROrdering.ByMoveTypeThenNumber)
+    {
+        <input type="radio" name="TROrdering" value="ByMoveTypeThenNumber" checked @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}" />
+    }
+    else
+    {
+        <input type="radio" name="TROrdering" value="ByMoveTypeThenNumber" @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}" />
+    }
+    @TROrdering.ByMoveTypeThenNumber.HumanReadableName()<br />
+
     <button @onclick="ToggleSettingOptions">Done</button>
 }
 else
@@ -114,13 +154,13 @@ else
                             }
                             break;
                         case TargetItemCategory.TR:
-                            @foreach (var recipe in Recipes.TRRecipes)
+                            @foreach (var recipe in Recipes.TRRecipes.Values.OrderBy(Option_TROrdering))
                             {
-                                <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
+                                <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe)">
                                     <div class="item-choice-inner">
-                                        <div class="item-sprite" style="@recipe.Value.Item.HtmlSpriteStyle"></div>
+                                        <div class="item-sprite" style="@recipe.Item.HtmlSpriteStyle"></div>
                                         <br />
-                                        @recipe.Value.Item.ToString()
+                                        @recipe.Item.ToString()
                                     </div>
                                 </div>
                             }

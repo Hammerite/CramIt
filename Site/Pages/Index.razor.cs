@@ -81,6 +81,8 @@ namespace CramIt.Site.Pages
             }
         }
 
+        protected TROrdering Option_TROrdering { get; set; }
+
         protected void RecipeClicked(StandardRecipe recipe)
             => RecipeClicked(new [] {recipe});
 
