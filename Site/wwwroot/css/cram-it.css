@@ -13,11 +13,12 @@ button {
     border: 1px solid black;
 }
 
-.options-button {
+.options-and-info-button {
     float: right;
     position: absolute;
     top: 13px;
     right: -11px;
+    width: 100px;
 }
 
 .item-choice-outer {
@@ -55,6 +56,11 @@ h1 {
     text-align: center;
 }
 
+h2 {
+    text-align: center;
+    font-size: 22px;
+}
+
 .target-item-category-choice {
     text-align: center;
 }
@@ -67,16 +73,17 @@ h1 {
     margin: 0px 5px;
     border: 1px solid black;
     text-align: center;
-    cursor: default;
 }
 
 .category-selected {
     font-weight: bold;
     background-color: mediumspringgreen;
+    cursor: default;
 }
 
 .category-unselected {
     background-color: lightcyan;
+    cursor: pointer;
 }
 
 .summary-panel {

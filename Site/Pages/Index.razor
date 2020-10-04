@@ -4,10 +4,10 @@
 <div id="sticky">
     <h1>CRAM IT!</h1>
 
+    <button class="options-and-info-button" @onclick="ToggleSettingOptions">@OptionsAndInfoButtonLabel</button>
+
     @if ( ! SettingOptions)
     {
-        <button class="options-button" @onclick="ToggleSettingOptions">Options</button>
-
         @switch (Mode)
         {
             case Mode.SelectingDesiredOutput:
@@ -96,187 +96,211 @@
 
 @if (SettingOptions)
 {
-    <input type="checkbox" @bind="Option_IncludeIrreplaceableInputItems" />
-    @:Include irreplaceable input items<br />
-    <input type="checkbox" @bind="Option_CombineGroupsOfSimilarInputItems" />
-    @:Combine groups of similar input items<br />
+    <h2>Options</h2>
 
-    <!-- Todo: Find out if there is a way to do radio buttons that isn't shit -->
+    <p>
+        <input type="checkbox" @bind="Option_IncludeIrreplaceableInputItems" />
+        Include irreplaceable input items<br />
+        <input type="checkbox" @bind="Option_CombineGroupsOfSimilarInputItems" />
+        Combine groups of similar input items
+    </p>
 
-    @:Ordering of TRs:<br />
+    <!-- Todo: Find out if there is a way to do radio buttons that isn't garbage -->
 
-    @if (Option_TROrdering == TROrdering.ByMoveName)
-    {
-        <input type="radio"
-               name="TROrdering"
-               value="ByMoveName"
-               checked
-               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}"
-               />
-    }
-    else
-    {
-        <input type="radio"
-               name="TROrdering"
-               value="ByMoveName"
-               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}"
-               />
-    }
-    @TROrdering.ByMoveName.HumanReadableName()<br />
+    <p>
+        Ordering of TRs:<br />
 
-    @if (Option_TROrdering == TROrdering.ByNumber)
-    {
-        <input type="radio"
-               name="TROrdering"
-               value="ByNumber"
-               checked
-               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}" />
-    }
-    else
-    {
-        <input type="radio"
-               name="TROrdering"
-               value="ByNumber"
-               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}"
-               />
-    }
-    @TROrdering.ByNumber.HumanReadableName()<br />
+        @if (Option_TROrdering == TROrdering.ByMoveName)
+        {
+            <input type="radio"
+                   name="TROrdering"
+                   value="ByMoveName"
+                   checked
+                   @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}"
+                   />
+        }
+        else
+        {
+            <input type="radio"
+                   name="TROrdering"
+                   value="ByMoveName"
+                   @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}"
+                   />
+        }
+        @TROrdering.ByMoveName.HumanReadableName()<br />
 
-    @if (Option_TROrdering == TROrdering.ByMoveTypeThenMoveName)
-    {
-        <input type="radio"
-               name="TROrdering"
-               value="ByMoveTypeThenMoveName"
-               checked
-               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}"
-               />
-    }
-    else
-    {
-        <input type="radio"
-               name="TROrdering"
-               value="ByMoveTypeThenMoveName"
-               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}"
-               />
-    }
-    @TROrdering.ByMoveTypeThenMoveName.HumanReadableName()<br />
+        @if (Option_TROrdering == TROrdering.ByNumber)
+        {
+            <input type="radio"
+                   name="TROrdering"
+                   value="ByNumber"
+                   checked
+                   @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}" />
+        }
+        else
+        {
+            <input type="radio"
+                   name="TROrdering"
+                   value="ByNumber"
+                   @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}"
+                   />
+        }
+        @TROrdering.ByNumber.HumanReadableName()<br />
 
-    @if (Option_TROrdering == TROrdering.ByMoveTypeThenNumber)
-    {
-        <input type="radio"
-               name="TROrdering"
-               value="ByMoveTypeThenNumber"
-               checked
-               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}"
-               />
-    }
-    else
-    {
-        <input type="radio"
-               name="TROrdering"
-               value="ByMoveTypeThenNumber"
-               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}"
-               />
-    }
-    @TROrdering.ByMoveTypeThenNumber.HumanReadableName()<br />
+        @if (Option_TROrdering == TROrdering.ByMoveTypeThenMoveName)
+        {
+            <input type="radio"
+                   name="TROrdering"
+                   value="ByMoveTypeThenMoveName"
+                   checked
+                   @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}"
+                   />
+        }
+        else
+        {
+            <input type="radio"
+                   name="TROrdering"
+                   value="ByMoveTypeThenMoveName"
+                   @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}"
+                   />
+        }
+        @TROrdering.ByMoveTypeThenMoveName.HumanReadableName()<br />
+
+        @if (Option_TROrdering == TROrdering.ByMoveTypeThenNumber)
+        {
+            <input type="radio"
+                   name="TROrdering"
+                   value="ByMoveTypeThenNumber"
+                   checked
+                   @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}"
+                   />
+        }
+        else
+        {
+            <input type="radio"
+                   name="TROrdering"
+                   value="ByMoveTypeThenNumber"
+                   @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}"
+                   />
+        }
+        @TROrdering.ByMoveTypeThenNumber.HumanReadableName()
+    </p>
     
-    @:Ordering of input items:<br />
+    <p>
+        Ordering of input items:<br />
 
-    @if (Option_InputItemOrdering == InputItemOrdering.ByName)
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByName"
-               checked
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByName;}"
-               />
-    }
-    else
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByName"
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByName;}"
-               />
-    }
-    @InputItemOrdering.ByName.HumanReadableName()<br />
+        @if (Option_InputItemOrdering == InputItemOrdering.ByName)
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByName"
+                   checked
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByName;}"
+                   />
+        }
+        else
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByName"
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByName;}"
+                   />
+        }
+        @InputItemOrdering.ByName.HumanReadableName()<br />
 
-    @if (Option_InputItemOrdering == InputItemOrdering.ByValue)
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByValue"
-               checked
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByValue;}"
-               />
-    }
-    else
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByValue"
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByValue;}" />
-    }
-    @InputItemOrdering.ByValue.HumanReadableName()<br />
+        @if (Option_InputItemOrdering == InputItemOrdering.ByValue)
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByValue"
+                   checked
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByValue;}"
+                   />
+        }
+        else
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByValue"
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByValue;}" />
+        }
+        @InputItemOrdering.ByValue.HumanReadableName()<br />
 
-    @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenName)
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByViabilityCategoryThenName"
-               checked
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenName;}"
-               />
-    }
-    else
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByViabilityCategoryThenName"
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenName;}"
-               />
-    }
-    @InputItemOrdering.ByViabilityCategoryThenName.HumanReadableName()<br />
+        @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenName)
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByViabilityCategoryThenName"
+                   checked
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenName;}"
+                   />
+        }
+        else
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByViabilityCategoryThenName"
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenName;}"
+                   />
+        }
+        @InputItemOrdering.ByViabilityCategoryThenName.HumanReadableName()<br />
 
-    @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenValue)
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByViabilityCategoryThenValue"
-               checked
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValue;}"
-               />
-    }
-    else
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByViabilityCategoryThenValue"
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValue;}"
-               />
-    }
-    @InputItemOrdering.ByViabilityCategoryThenValue.HumanReadableName()<br />
+        @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenValue)
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByViabilityCategoryThenValue"
+                   checked
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValue;}"
+                   />
+        }
+        else
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByViabilityCategoryThenValue"
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValue;}"
+                   />
+        }
+        @InputItemOrdering.ByViabilityCategoryThenValue.HumanReadableName()<br />
 
-    @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName)
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName"
-               checked
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName;}"
-               />
-    }
-    else
-    {
-        <input type="radio"
-               name="InputItemOrdering"
-               value="ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName"
-               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName;}"
-               />
-    }
-    @InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName.HumanReadableName()<br />
+        @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName)
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName"
+                   checked
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName;}"
+                   />
+        }
+        else
+        {
+            <input type="radio"
+                   name="InputItemOrdering"
+                   value="ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName"
+                   @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName;}"
+                   />
+        }
+        @InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName.HumanReadableName()
+    </p>
 
-    <button @onclick="ToggleSettingOptions">Done</button>
+    <p>
+        <button @onclick="ToggleSettingOptions">Done</button>
+    </p>
+
+    <h2>Info</h2>
+
+    <p>
+        CRAM IT! by Hammerite<br />
+        Data has been taken from <a href="https://bulbapedia.bulbagarden.net/wiki/Cram-o-matic">Bulbapedia</a>
+    </p>
+    <p>
+        The sprites (graphics) used are the intellectual property of Nintendo, Game Freak, The Pok&eacute;mon Company and/or other associated organisations.
+        No permission for use of the sprites has been sought or granted; they are used here in the belief that this is defensible as "fair use".
+        In addition, the distinctive names of in-game items used may constitute intellectual property of the aforementioned organisations.
+        No ownership or authorship of either the sprites or the names is claimed.
+        No copyright or trademark infringement is intended in using Pok&eacute;mon content within this web application.
+    </p>
 }
 else
 {

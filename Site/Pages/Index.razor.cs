@@ -13,6 +13,9 @@ namespace CramIt.Site.Pages
         public const int NumberOfItemsPerBatch = 4;
 
         protected bool SettingOptions { get; set; }
+        protected string OptionsAndInfoButtonLabel
+            => SettingOptions ? "Done" : "Options/Info";
+
         protected Mode Mode { get; set; }
 
         protected InputItemOptions InputItemOptions         { get; set; } = new InputItemOptions();
