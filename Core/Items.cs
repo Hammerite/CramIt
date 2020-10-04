@@ -29,9 +29,9 @@ namespace CramIt.Core
             return inputItems;
         }
 
-        public static IEnumerable<(Item Item, InputItemViabilityCategory BestViabilityCategory)> InputItems(
+        public static IEnumerable<InputItemWithViabilityCategoryInformation> InputItems(
             InputItemOptions options, StandardRecipeGroupItemFilterer standardRecipeGroupItemFilterer)
-            => InputItems(options).Select(item => (item, standardRecipeGroupItemFilterer.BestViabilityCategory(item)));
+            => InputItems(options).Select(item => new InputItemWithViabilityCategoryInformation(item, standardRecipeGroupItemFilterer.BestViabilityCategory(item)));
 
         static Items()
         {

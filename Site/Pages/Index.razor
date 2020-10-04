@@ -100,45 +100,181 @@
     @:Include irreplaceable input items<br />
     <input type="checkbox" @bind="Option_CombineGroupsOfSimilarInputItems" />
     @:Combine groups of similar input items<br />
-    @:Ordering of TRs:<br />
 
     <!-- Todo: Find out if there is a way to do radio buttons that isn't shit -->
+
+    @:Ordering of TRs:<br />
+
     @if (Option_TROrdering == TROrdering.ByMoveName)
     {
-        <input type="radio" name="TROrdering" value="ByMoveName" checked @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}" />
+        <input type="radio"
+               name="TROrdering"
+               value="ByMoveName"
+               checked
+               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}"
+               />
     }
     else
     {
-        <input type="radio" name="TROrdering" value="ByMoveName" @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}" />
+        <input type="radio"
+               name="TROrdering"
+               value="ByMoveName"
+               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveName;}"
+               />
     }
     @TROrdering.ByMoveName.HumanReadableName()<br />
+
     @if (Option_TROrdering == TROrdering.ByNumber)
     {
-        <input type="radio" name="TROrdering" value="ByNumber" checked @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}" />
+        <input type="radio"
+               name="TROrdering"
+               value="ByNumber"
+               checked
+               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}" />
     }
     else
     {
-        <input type="radio" name="TROrdering" value="ByNumber" @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}" />
+        <input type="radio"
+               name="TROrdering"
+               value="ByNumber"
+               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByNumber;}"
+               />
     }
     @TROrdering.ByNumber.HumanReadableName()<br />
+
     @if (Option_TROrdering == TROrdering.ByMoveTypeThenMoveName)
     {
-        <input type="radio" name="TROrdering" value="ByMoveTypeThenMoveName" checked @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}" />
+        <input type="radio"
+               name="TROrdering"
+               value="ByMoveTypeThenMoveName"
+               checked
+               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}"
+               />
     }
     else
     {
-        <input type="radio" name="TROrdering" value="ByMoveTypeThenMoveName" @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}" />
+        <input type="radio"
+               name="TROrdering"
+               value="ByMoveTypeThenMoveName"
+               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenMoveName;}"
+               />
     }
     @TROrdering.ByMoveTypeThenMoveName.HumanReadableName()<br />
+
     @if (Option_TROrdering == TROrdering.ByMoveTypeThenNumber)
     {
-        <input type="radio" name="TROrdering" value="ByMoveTypeThenNumber" checked @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}" />
+        <input type="radio"
+               name="TROrdering"
+               value="ByMoveTypeThenNumber"
+               checked
+               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}"
+               />
     }
     else
     {
-        <input type="radio" name="TROrdering" value="ByMoveTypeThenNumber" @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}" />
+        <input type="radio"
+               name="TROrdering"
+               value="ByMoveTypeThenNumber"
+               @onchange="eventArgs => {Option_TROrdering = TROrdering.ByMoveTypeThenNumber;}"
+               />
     }
     @TROrdering.ByMoveTypeThenNumber.HumanReadableName()<br />
+    
+    @:Ordering of input items:<br />
+
+    @if (Option_InputItemOrdering == InputItemOrdering.ByName)
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByName"
+               checked
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByName;}"
+               />
+    }
+    else
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByName"
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByName;}"
+               />
+    }
+    @InputItemOrdering.ByName.HumanReadableName()<br />
+
+    @if (Option_InputItemOrdering == InputItemOrdering.ByValue)
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByValue"
+               checked
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByValue;}"
+               />
+    }
+    else
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByValue"
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByValue;}" />
+    }
+    @InputItemOrdering.ByValue.HumanReadableName()<br />
+
+    @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenName)
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByViabilityCategoryThenName"
+               checked
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenName;}"
+               />
+    }
+    else
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByViabilityCategoryThenName"
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenName;}"
+               />
+    }
+    @InputItemOrdering.ByViabilityCategoryThenName.HumanReadableName()<br />
+
+    @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenValue)
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByViabilityCategoryThenValue"
+               checked
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValue;}"
+               />
+    }
+    else
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByViabilityCategoryThenValue"
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValue;}"
+               />
+    }
+    @InputItemOrdering.ByViabilityCategoryThenValue.HumanReadableName()<br />
+
+    @if (Option_InputItemOrdering == InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName)
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName"
+               checked
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName;}"
+               />
+    }
+    else
+    {
+        <input type="radio"
+               name="InputItemOrdering"
+               value="ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName"
+               @onchange="eventArgs => {Option_InputItemOrdering = InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName;}"
+               />
+    }
+    @InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName.HumanReadableName()<br />
 
     <button @onclick="ToggleSettingOptions">Done</button>
 }
@@ -152,7 +288,7 @@ else
                     @switch (TargetItemCategory)
                     {
                         case TargetItemCategory.NotTR:
-                            @foreach (var recipe in Recipes.StandardRecipesExcludingTRs)
+                            @foreach (var recipe in Recipes.StandardRecipesExcludingTRs.OrderBy(kvp => kvp.Key))
                             {
                                 <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe.Value)">
                                     <div class="item-choice-inner">
@@ -164,7 +300,7 @@ else
                             }
                             break;
                         case TargetItemCategory.TR:
-                            @foreach (var recipe in Recipes.TRRecipes.Values.OrderBy(Option_TROrdering))
+                            @foreach (var recipe in Recipes.TRRecipes.Values.ApplyOrdering(Option_TROrdering))
                             {
                                 <div class="item-choice-outer recipe-choice" @onclick="() => RecipeClicked(recipe)">
                                     <div class="item-choice-inner">
@@ -188,36 +324,36 @@ else
                             InputItemValueContributionDivStyle_MinimumMarker() :
                             "";
                     }
-                    @foreach (var t in Items.InputItems(
-                        InputItemOptions, StandardRecipeGroupItemFilterer).OrderByDescending(t => (int)(t.BestViabilityCategory)))
+                    @foreach (var candidate in Items.InputItems(
+                        InputItemOptions, StandardRecipeGroupItemFilterer).ApplyOrdering(Option_InputItemOrdering))
                     {
-                        if (t.Item == TargetItem)
+                        if (candidate.Item == TargetItem)
                         {
                             continue;
                         }
 
-                        string viabilityClassName = t.BestViabilityCategory.CssClassName("input-item-choice");
-                        if (t.BestViabilityCategory == InputItemViabilityCategory.Viable_OfPlacatoryType)
+                        string viabilityClassName = candidate.BestViabilityCategory.CssClassName("input-item-choice");
+                        if (candidate.BestViabilityCategory == InputItemViabilityCategory.Viable_OfPlacatoryType)
                         {
                             viabilityClassName += StandardRecipeGroupItemFilterer.TypedInputRequiredForAnyRecipe ? "-type-matters" : "-type-doesnt-matter";
                         }
 
-                        <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemChosen(t.Item)">
+                        <div class="item-choice-outer input-item-choice @viabilityClassName" @onclick="() => InputItemChosen(candidate.Item)">
                             <div class="item-choice-inner">
-                                <div class="item-sprite" style="@t.Item.HtmlSpriteStyle"></div>
+                                <div class="item-sprite" style="@candidate.Item.HtmlSpriteStyle"></div>
                                 <br />
-                                @t.Item.ToString(InputItemOptions.CombineGroupsOfSimilarItems)
+                                @candidate.Item.ToString(InputItemOptions.CombineGroupsOfSimilarItems)
                             </div>
                             @if (TargetRecipes.Count == 1 && AlreadyChosenInputItemsTotalValue <= TargetRecipes[0].MaximumTotalValue)
                             {
                                 <div class="value-contribution-div-outer">
-                                    @if (AlreadyChosenInputItemsTotalValue + t.Item.Value > TargetRecipes[0].MaximumTotalValue)
+                                    @if (AlreadyChosenInputItemsTotalValue + candidate.Item.Value > TargetRecipes[0].MaximumTotalValue)
                                     {
                                         <div class="value-contribution-div-inner-too-much"></div>
                                     }
                                     else
                                     {
-                                        <div class="value-contribution-div-inner" style="@InputItemValueContributionDivStyle_Inner(t.Item)"></div>
+                                        <div class="value-contribution-div-inner" style="@InputItemValueContributionDivStyle_Inner(candidate.Item)"></div>
                                         @if (AlreadyChosenInputItemsTotalValue < TargetRecipes[0].MinimumTotalValue)
                                         {
                                             <div class="value-contribution-div-minimum-marker" style="@inputItemValueContributionDivStyle_MinimumMarker"></div>

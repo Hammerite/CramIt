@@ -27,7 +27,7 @@ namespace CramIt.Core
             }
         }
 
-        public static IEnumerable<Item> OrderBy(this IEnumerable<Item> trs, TROrdering ordering)
+        public static IEnumerable<Item> ApplyOrdering(this IEnumerable<Item> trs, TROrdering ordering)
         {
             switch (ordering)
             {
@@ -40,7 +40,7 @@ namespace CramIt.Core
             }
         }
 
-        public static IEnumerable<StandardRecipe> OrderBy(this IEnumerable<StandardRecipe> recipes, TROrdering ordering)
+        public static IEnumerable<StandardRecipe> ApplyOrdering(this IEnumerable<StandardRecipe> recipes, TROrdering ordering)
         {
             switch (ordering)
             {
