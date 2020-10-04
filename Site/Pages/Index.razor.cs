@@ -222,6 +222,43 @@ namespace CramIt.Site.Pages
                 .ToArray();
 
             _inputItemSlots = reorderedNonNullSlots.Concat(Enumerable.Repeat<Item>(null, NumberOfFreeItemSlots)).ToArray();
+
+            MoveIdenticalItemsAdjacent();
+        }
+
+        private void MoveIdenticalItemsAdjacent()
+        {
+            for (int i = 0; i < NumberOfItemsPerBatch - 1; ++i)
+            {
+                if (_inputItemSlots[i + 1] == _inputItemSlots[i])
+                {
+                    continue;
+                }
+
+                for (int j = i + 2; j < NumberOfItemsPerBatch; ++j)
+                {
+                    if (_inputItemSlots[j] == _inputItemSlots[i])
+                    {
+                        if (i == 0 && j == 3)
+                        {
+                            Swap(ref _inputItemSlots[3], ref _inputItemSlots[2]);
+                            Swap(ref _inputItemSlots[2], ref _inputItemSlots[1]);
+                        }
+                        else
+                        {
+                            Swap(ref _inputItemSlots[i + 1], ref _inputItemSlots[j]);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void Swap<T>(ref T t0, ref T t1)
+        {
+            var temporary = t0;
+            t0 = t1;
+            t1 = temporary;
         }
 
         private void SetModeAccordingToFreeItemSlots()
