@@ -1,4 +1,6 @@
 ﻿body {
+    color: #ffdf4f;
+    background-color: #0f6fcf;
     /* Make sure the vertical scrollbar is always present, so that horizontally-centered
        content doesn't jump to the left or right when the mode changes.
        */
@@ -10,7 +12,24 @@
 }
 
 button {
+    color: black;
     border: 1px solid black;
+}
+
+a:link {
+    color: #ccff99;
+}
+
+a:visited {
+    color: #ffe6f2;
+}
+
+a:hover {
+    color: #ffffff;
+}
+
+a:active {
+    color: #fffae6;
 }
 
 .options-and-info-button {
@@ -19,6 +38,10 @@ button {
     top: 13px;
     right: -11px;
     width: 100px;
+}
+
+.options-radio-buttons-header {
+    font-weight: bold;
 }
 
 .item-choice-outer {
@@ -41,6 +64,7 @@ button {
     transform: translate(0%, -50%);
     width: 94px;
     padding: 0px 5px;
+    color: black;
 }
 
 #sticky {
@@ -49,7 +73,7 @@ button {
     padding: 15px 0px 10px 0px;
     width: 100%;
     z-index: 1;
-    background-color: white;
+    background-color: #0f6fcf;
 }
 
 h1 {
@@ -63,6 +87,7 @@ h2 {
 
 .target-item-category-choice {
     text-align: center;
+    color: black;
 }
 
 .category {
@@ -104,10 +129,11 @@ h2 {
 
 .chosen-item-slot-outer {
     height: 31px;
-    width: 204px;
+    width: 210px;
     border-style: solid;
     border-color: black;
     border-width: 0px 1px 1px 1px;
+    color: black;
 }
 
 .chosen-item-slot-outer-first {
@@ -116,6 +142,7 @@ h2 {
 }
 
 .chosen-item-slot-outer-not-yet-chosen {
+    background-color: #e6e6ff;
 }
 
 .chosen-item-slot-outer-already-chosen-not-of-placatory-type-for-any-recipe {
@@ -189,7 +216,7 @@ h2 {
 }
 
 .input-item-choice-nonviable {
-    background-color: gray;
+    background-color: #c7c7c7;
 }
 
 .input-item-choice-viable-not-of-placatory-type {

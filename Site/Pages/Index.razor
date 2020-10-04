@@ -108,7 +108,7 @@
     <!-- Todo: Find out if there is a way to do radio buttons that isn't garbage -->
 
     <p>
-        Ordering of TRs:<br />
+        <span class="options-radio-buttons-header">Ordering of TRs:</span><br />
 
         @if (Option_TROrdering == TROrdering.ByMoveName)
         {
@@ -187,7 +187,7 @@
     </p>
     
     <p>
-        Ordering of input items:<br />
+        <span class="options-radio-buttons-header">Ordering of input items:</span><br />
 
         @if (Option_InputItemOrdering == InputItemOrdering.ByName)
         {
@@ -291,7 +291,7 @@
     <h2>Info</h2>
 
     <p>
-        CRAM IT! by Hammerite<br />
+        <b>CRAM IT!</b> by Hammerite<br />
         Data has been taken from <a href="https://bulbapedia.bulbagarden.net/wiki/Cram-o-matic">Bulbapedia</a>
     </p>
     <p>
@@ -349,7 +349,7 @@ else
                             "";
                     }
                     @foreach (var candidate in Items.InputItems(
-                        InputItemOptions, StandardRecipeGroupItemFilterer).ApplyOrdering(Option_InputItemOrdering))
+                        InputItemOptions, StandardRecipeGroupItemFilterer).ApplyOrdering(Option_InputItemOrdering, InputItemOptions))
                     {
                         if (candidate.Item == TargetItem)
                         {

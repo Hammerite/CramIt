@@ -31,22 +31,23 @@ namespace CramIt.Core
         }
 
         public static IEnumerable<InputItemWithViabilityCategoryInformation> ApplyOrdering(
-            this IEnumerable<InputItemWithViabilityCategoryInformation> inputItems, InputItemOrdering ordering)
+            this IEnumerable<InputItemWithViabilityCategoryInformation> inputItems, InputItemOrdering ordering, InputItemOptions options)
         {
             switch (ordering)
             {
                 case InputItemOrdering.ByName:
-                    return inputItems.OrderBy(item => item.Item.Name);
+                    return inputItems.OrderBy(item => item.Item.ToString(options.CombineGroupsOfSimilarItems));
                 case InputItemOrdering.ByValue:
                     return inputItems.OrderBy(item => item.Item.Value);
                 case InputItemOrdering.ByViabilityCategoryThenName:
-                    return inputItems.OrderByDescending(item => item.BestViabilityCategory).ThenBy(item => item.Item.Name);
+                    return inputItems.OrderByDescending(item => item.BestViabilityCategory).ThenBy(item => item.Item.ToString(options.CombineGroupsOfSimilarItems));
                 case InputItemOrdering.ByViabilityCategoryThenValue:
                     return inputItems.OrderByDescending(item => item.BestViabilityCategory).ThenBy(item => item.Item.Value);
                 case InputItemOrdering.ByViabilityCategoryThenValueExceptThatNonviableItemsAreOrderedByName:
-                    return inputItems.OrderByDescending(item => item.BestViabilityCategory)
-                                     .ThenBy(item => item.BestViabilityCategory == InputItemViabilityCategory.Nonviable ? item.Item.Name : "")
-                                     .ThenBy(item => item.BestViabilityCategory == InputItemViabilityCategory.Nonviable ? 0 : item.Item.Value);
+                    return inputItems
+                        .OrderByDescending(item => item.BestViabilityCategory)
+                        .ThenBy(item => item.BestViabilityCategory == InputItemViabilityCategory.Nonviable ? item.Item.ToString(options.CombineGroupsOfSimilarItems) : "")
+                        .ThenBy(item => item.BestViabilityCategory == InputItemViabilityCategory.Nonviable ? 0 : item.Item.Value);
                 default:
                     throw new Exception($@"Unhandled {nameof(TROrdering)} ""{ordering}"" in switch");
             }
