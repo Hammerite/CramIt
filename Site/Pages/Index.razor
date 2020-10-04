@@ -27,6 +27,7 @@
                     }
                 </div>
                 break;
+
             case Mode.SelectingInputs:
             case Mode.SelectionComplete:
                 <div class="summary-panel">
@@ -70,7 +71,7 @@
                                     @{
                                         int i_Uncaptured = i;
                                     }
-                                    <button @onclick="() => InputItemUnchosen(i_Uncaptured)" class="unchoose-item-button">&times;</button>
+                                    <button class="unchoose-item-button" @onclick="() => InputItemUnchosen(i_Uncaptured)">&times;</button>
                                 </div>
                             }
                         }
@@ -78,16 +79,17 @@
                     <div class="button-container-clear-and-restart">
                         @if (AnyInputItemsChosen)
                         {
-                            <button @onclick="OnClear" class="clear-button">Clear</button>
+                            <button class="clear-button" @onclick="OnClear">Clear</button>
                         }
                         else
                         {
-                            <button @onclick="OnClear" class="clear-button" disabled>Clear</button>
+                            <button class="clear-button" @onclick="OnClear" disabled>Clear</button>
                         }
-                        <button @onclick="OnRestart" class="restart-button">Restart</button>
+                        <button class="restart-button" @onclick="OnRestart">Restart</button>
                     </div>
                 </div>
                 break;
+
             default:
                 throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
         }
@@ -292,7 +294,8 @@
 
     <p>
         <b>CRAM IT!</b> by Hammerite<br />
-        Data has been taken from <a href="https://bulbapedia.bulbagarden.net/wiki/Cram-o-matic">Bulbapedia</a>
+        Data has been taken from <a href="https://bulbapedia.bulbagarden.net/wiki/Cram-o-matic">Bulbapedia</a><br />
+        Implemented in <a href="https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor">Blazor</a>.
     </p>
     <p>
         The sprites (graphics) used are the intellectual property of Nintendo, Game Freak, The Pok&eacute;mon Company and/or other associated organisations.
@@ -340,6 +343,7 @@ else
                     }
                 </div>
                 break;
+
             case Mode.SelectingInputs:
                 <div class="item-choice-list">
                     @{
@@ -389,8 +393,13 @@ else
                     }
                 </div>
                 break;
+
             case Mode.SelectionComplete:
+                <p class="centered">
+                    <button @onclick="CopyToClipboard">Copy to Clipboard</button>
+                </p>
                 break;
+
             default:
                 throw new Exception($@"Unhandled {nameof(CramIt.Site.Mode)} ""{Mode}"" in switch");
         }

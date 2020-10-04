@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using CramIt.Core;
 
 namespace CramIt.Site.Pages
@@ -11,6 +13,9 @@ namespace CramIt.Site.Pages
     public abstract class IndexBase: ComponentBase
     {
         public const int NumberOfItemsPerBatch = 4;
+
+        [Inject]
+        IJSRuntime JSRuntime { get; set; }
 
         protected bool SettingOptions { get; set; }
         protected string OptionsAndInfoButtonLabel
@@ -182,6 +187,15 @@ namespace CramIt.Site.Pages
             string heightAsString = (100 * proportionateHeight).ToString("F1", CultureInfo.InvariantCulture);
 
             return $"height: {heightAsString}%;";
+        }
+
+        protected async Task CopyToClipboard()
+            => await JSRuntime.InvokeAsync<string>("navigator.clipboard.writeText", new [] {BuildTextForClipboard()});
+
+        private string BuildTextForClipboard()
+        {
+            string inputItemList = string.Join(" + ", InputItemSlots.Select(slot => slot.ToString(InputItemOptions.CombineGroupsOfSimilarItems)));
+            return $"{TargetItem} = {inputItemList}";
         }
 
         protected void OnClear()
